@@ -21,12 +21,31 @@ Experiments build on [MemHarmBench](https://github.com/Kirito14IT/MemHarmBench) 
 Requires [uv](https://docs.astral.sh/uv/). Python 3.12 is pinned in `.python-version` (3.11+ supported).
 
 ```bash
-uv sync                      # create .venv and install dependencies
+git clone --recurse-submodules https://github.com/Geckonaril/MemAuthy.git
+cd MemAuthy                  # existing clone: git submodule update --init
+uv sync                      # create .venv and install dependencies (incl. MemHarmBench)
 uv run pytest -q             # tests (no API key needed)
 uv run ruff check .          # lint
 uv run ruff format --check . # format check
 uv run memauthy --version    # or: uv run python -m memauthy --version
 ```
+
+### Benchmark
+
+[MemHarmBench](https://github.com/Kirito14IT/MemHarmBench) is a pinned git submodule at
+`third_party/MemHarmBench` (commit `9affbe5`, dataset revision `2b4c2b7`; see
+[ADR-0002](docs/decisions/0002-benchmark-integration.md)). Its inputs come from a public
+Hugging Face dataset and are verified offline; no API key or model call is involved.
+
+```bash
+uv run memauthy bench info         # pinned commit, dataset revision, data location
+uv run memauthy bench download     # fetch and verify the pinned dataset
+uv run memauthy bench validate     # offline validation (288 cases)
+uv run memauthy bench catalog      # list cases
+uv run pytest -q -m benchmark      # tests that need the dataset
+```
+
+Set `MEMHARMBENCH_DATA_ROOT` to keep the dataset outside the submodule.
 
 ## Contributing and design decisions
 

@@ -22,7 +22,24 @@ and data are exactly the ones reported.
 - All adaptation code (reading native memory files, applying an audited snapshot to a trigger
   branch) lives in `src/memauthy/memory_io/`.
 - Unit tests use synthetic fixtures. Tests that need real benchmark data are marked
-  `@pytest.mark.benchmark` and skip when the dataset is absent, so CI needs no download.
+  `@pytest.mark.benchmark` and skip when the dataset is absent, so the main test jobs need no
+  download. A separate CI job downloads the public dataset, runs the offline validation and the
+  benchmark tests, and checks that the submodule stays unmodified.
+
+### Pinned versions (2026-11-19)
+
+| Item | Value |
+|---|---|
+| MemHarmBench commit | `9affbe5af5c2624ac6d4c03730a39ec11d6cc802` (package `memharmbench` 8.4.3) |
+| Dataset | `kirco567/MemHarmBench` @ `2b4c2b736fdbabf7e56182870d71095ac38afdb0` |
+| Dataset input fingerprint | `fc129ed3bef9fc040fac73f5f257f5b86447ff2404303d457a4de636d660e462` |
+| Release lock sha256 | `9381083bd5a68c10472b00e3ee217ce5c6c3c4ae78c415d19c20dc1fb282a92c` |
+
+Offline validation at these versions: 288 cases (96 direct, 192 indirect), 24 templates,
+12 contexts, 12 objectives, 0 model requests.
+
+The package is installed through the uv dependency group `bench` (enabled by default) rather
+than the runtime dependencies, so `memauthy` itself installs without the submodule.
 
 ## Alternatives considered
 - **Vendoring a copy** — easy to drift and to modify accidentally.
