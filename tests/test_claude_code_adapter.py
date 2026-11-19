@@ -59,6 +59,7 @@ INVALID_KEYS = [
     "workspace:",
     "workspace:sub//CLAUDE.md",
     "claude_config:projects/-workspace/memory/./x.md",
+    "claude_config:projects/-workspace/memory/.md",
 ]
 
 
@@ -87,7 +88,7 @@ def test_validate_rejects_truncated_and_oversized() -> None:
         cc.validate_memory({MEMORY_KEY: "x ...[truncated 10 chars]"})
     with pytest.raises(cc.MemoryFormatError, match="too large"):
         cc.validate_memory({MEMORY_KEY: "x" * cc.MAX_FILE_CHARS})
-    with pytest.raises(cc.MemoryFormatError, match="not a Claude Code memory key"):
+    with pytest.raises(cc.MemoryFormatError, match="not a claude-code memory key"):
         cc.validate_memory({"workspace:imports/CLAUDE.md": "x"})
 
 
@@ -199,6 +200,17 @@ def test_defense_changes_only_the_injected_block(tmp_path: Path, policy: Policy)
     assert new_files[TOPIC_KEY].startswith("---\nname: records-conventions")
     # The audited output can be written as a fresh agent directory.
     cc.write_agent_dir(new_files, tmp_path / "audited")
+
+
+def test_file_roles() -> None:
+    mem = cc.from_files({**FILES, "claude_config:CLAUDE.md": "- global\n"}, snapshot_id="s")
+    roles = {r.metadata["file"]: r.metadata["file_role"] for r in mem.snapshot.records}
+    assert roles == {
+        "workspace:CLAUDE.md": "project_instructions",
+        "claude_config:CLAUDE.md": "user_instructions",
+        MEMORY_KEY: "auto_memory_index",
+        TOPIC_KEY: "auto_memory",
+    }
 
 
 def test_file_granularity(tmp_path: Path) -> None:
