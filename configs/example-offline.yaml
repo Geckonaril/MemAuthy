@@ -1,0 +1,12 @@
+# Example tier-0 (offline) experiment config. Validated by memauthy.config.ExperimentConfig.
+name: example-offline
+description: Offline detection on synthetic fixtures (no model calls).
+tier: 0
+seed: 20261119
+defenses: [D0]
+provenance_levels: [P0, P1, P3]
+policies: [block, quarantine, downgrade]
+case_ids: []
+models: {}
+params:
+  act_on_uncertain: false
