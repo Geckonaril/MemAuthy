@@ -1,0 +1,44 @@
+name: Experiment
+description: Design or run an experiment
+labels: ["type: experiment"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Research question / hypothesis
+      description: Which RQ/H does this address? Is it preregistered (confirmatory) or exploratory?
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Design
+      description: Conditions (D0–D4, P0–P3, policy), cases or strata, replicates, metrics, seed.
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Cost tier
+      options:
+        - "Tier 0 - offline (no model calls)"
+        - "Tier 1 - local / free model"
+        - "Tier 2 - paid API"
+    validations:
+      required: true
+  - type: textarea
+    id: estimate
+    attributes:
+      label: Cost estimate
+      description: Required for tier 2. Number of calls, tokens, USD. Run a 1-5 case pilot first.
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Approval
+      options:
+        - label: Tier 2 only — the maintainer explicitly approved the cost estimate above
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Expected outputs
+      description: Result files, tables, figures; where the manifest and cost log will be written.

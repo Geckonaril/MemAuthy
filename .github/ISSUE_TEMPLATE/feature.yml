@@ -1,0 +1,25 @@
+name: Feature / task
+description: New functionality, documentation or tooling work
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should exist after this issue is closed, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Files/modules involved and what is explicitly out of scope.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: Verifiable acceptance criteria (commands, tests, outputs).
+    validations:
+      required: true
