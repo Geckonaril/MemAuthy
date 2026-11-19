@@ -1,5 +1,7 @@
 # MemAuthy
 
+[![CI](https://github.com/Geckonaril/MemAuthy/actions/workflows/ci.yml/badge.svg)](https://github.com/Geckonaril/MemAuthy/actions/workflows/ci.yml)
+
 Provenance- and authority-aware memory auditing against cross-session prompt injection
 in persistent-memory AI agents.
 
