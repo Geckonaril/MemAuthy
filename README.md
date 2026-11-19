@@ -14,6 +14,18 @@ Experiments build on [MemHarmBench](https://github.com/Kirito14IT/MemHarmBench) 
 
 > **Status:** early development. Architecture and experiment setup are in progress.
 
+## Development
+
+Requires [uv](https://docs.astral.sh/uv/). Python 3.12 is pinned in `.python-version` (3.11+ supported).
+
+```bash
+uv sync                      # create .venv and install dependencies
+uv run pytest -q             # tests (no API key needed)
+uv run ruff check .          # lint
+uv run ruff format --check . # format check
+uv run memauthy --version    # or: uv run python -m memauthy --version
+```
+
 ## License
 
 [MIT](LICENSE)

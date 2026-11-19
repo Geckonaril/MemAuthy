@@ -1,0 +1,10 @@
+"""MemAuthy: provenance- and authority-aware memory auditing for persistent-memory agents."""
+
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("memauthy")
+except PackageNotFoundError:  # pragma: no cover - only when running from a raw checkout
+    __version__ = "0.0.0"
+
+__all__ = ["__version__"]
