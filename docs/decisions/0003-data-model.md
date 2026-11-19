@@ -37,6 +37,19 @@ labelling and reproducibility.
 - `audit` (detection) and `apply` (enforcement) are separate so detection can be evaluated
   offline (P/R/F1) independently of the policy.
 
+### Policy semantics (confirmed during review of #4)
+
+| Topic | Decision | Rationale |
+|---|---|---|
+| Uncertain-provenance records | Kept active by default with unchanged content, flagged in metadata (`flag = uncertain_provenance`); acted on only with `act_on_uncertain=True` | Uncertainty alone is not evidence of an attack |
+| Records without a decision | Kept unchanged; defenses are not required to decide on every record | Supports defenses that produce partial decisions |
+| Downgrade wording | Fixed text in `downgrade_text()` for now | Gives experiments a stable starting point; changes are tracked separately |
+| Trusted sources | Only `user` and `workspace_config` | Keeps the trust boundary narrow |
+| Module layout | `schema.py`, `policy/`, `defenses/` kept separate | Makes defenses independently comparable |
+
+Audit metadata (including the uncertainty flag) lives in `MemoryRecord.metadata` and is not
+part of the content the agent reads; memory adapters write back `content` only.
+
 ## Alternatives considered
 - **dataclasses** — no validation or JSON schema; more hand-written serialisation.
 - **One `defend()` call** — couples detection and enforcement and prevents offline detection
