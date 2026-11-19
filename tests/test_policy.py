@@ -1,7 +1,7 @@
 import pytest
 
 from memauthy.policy import apply_policy
-from memauthy.policy.apply import AUDIT_KEY, ORIGINAL_CONTENT_KEY
+from memauthy.policy.apply import AUDIT_KEY, ORIGINAL_CONTENT_KEY, UNCERTAIN_FLAG
 from memauthy.schema import (
     AuditDecision,
     AuditResult,
@@ -62,6 +62,28 @@ def test_uncertain_left_alone_by_default(
 ) -> None:
     out = apply_policy(snapshot, audit_result, Policy.BLOCK)
     assert "r4" in out.record_ids
+
+
+@pytest.mark.parametrize("policy", list(Policy))
+def test_uncertain_kept_but_flagged(
+    snapshot: MemorySnapshot, audit_result: AuditResult, policy: Policy
+) -> None:
+    original = snapshot.get("r4")
+    r4 = apply_policy(snapshot, audit_result, policy).get("r4")
+    assert r4 is not None and original is not None
+    assert r4.content == original.content
+    assert r4.status is RecordStatus.ACTIVE
+    assert r4.metadata[AUDIT_KEY]["flag"] == UNCERTAIN_FLAG
+    assert r4.metadata[AUDIT_KEY]["policy"] is None
+    assert r4.metadata[AUDIT_KEY]["authority"] == "uncertain"
+
+
+def test_authorized_and_undecided_not_flagged(
+    snapshot: MemorySnapshot, audit_result: AuditResult
+) -> None:
+    out = apply_policy(snapshot, audit_result, Policy.QUARANTINE)
+    assert out.get("r1") == snapshot.get("r1")  # authorized
+    assert out.get("r3") == snapshot.get("r3")  # no decision
 
 
 def test_uncertain_acted_on_when_requested(

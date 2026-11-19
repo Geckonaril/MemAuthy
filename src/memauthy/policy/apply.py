@@ -19,6 +19,7 @@ from memauthy.schema import (
 
 ORIGINAL_CONTENT_KEY = "memauthy_original_content"
 AUDIT_KEY = "memauthy_audit"
+UNCERTAIN_FLAG = "uncertain_provenance"
 
 
 def downgrade_text(content: str, decision: AuditDecision) -> str:
@@ -29,9 +30,10 @@ def downgrade_text(content: str, decision: AuditDecision) -> str:
     )
 
 
-def _audit_metadata(decision: AuditDecision, policy: Policy) -> dict[str, object]:
+def _audit_metadata(decision: AuditDecision, policy: Policy | None) -> dict[str, object]:
     return {
-        "policy": policy.value,
+        "policy": policy.value if policy is not None else None,
+        "flag": UNCERTAIN_FLAG if policy is None else None,
         "authority": decision.authority.value,
         "source": decision.source.value,
         "kind": decision.kind.value,
@@ -49,8 +51,11 @@ def apply_policy(
 ) -> MemorySnapshot:
     """Apply ``policy`` to every record the audit judged unauthorized.
 
-    Records judged ``uncertain`` are only acted on when ``act_on_uncertain`` is true; otherwise
-    they are left in place (and reported separately by the evaluation).
+    Records judged ``uncertain`` are only acted on when ``act_on_uncertain`` is true. By default
+    they stay active with unchanged content, but are flagged in their metadata
+    (``metadata[AUDIT_KEY]["flag"] == UNCERTAIN_FLAG``) so the evaluation can report them
+    separately: uncertainty alone is not evidence of an attack. Records without a decision are
+    always kept unchanged.
     """
     if result.snapshot_id != snapshot.snapshot_id:
         raise ValueError(
@@ -70,7 +75,12 @@ def apply_policy(
     for record in snapshot.records:
         decision = result.decision_for(record.record_id)
         if decision is None or decision.authority not in targets:
-            kept.append(record.model_copy(deep=True))
+            if decision is not None and decision.authority is Authority.UNCERTAIN:
+                metadata = copy.deepcopy(record.metadata)
+                metadata[AUDIT_KEY] = _audit_metadata(decision, None)
+                kept.append(record.model_copy(update={"metadata": metadata}))
+            else:
+                kept.append(record.model_copy(deep=True))
             continue
         if policy is Policy.BLOCK:
             continue
