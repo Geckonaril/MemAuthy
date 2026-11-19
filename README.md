@@ -26,6 +26,11 @@ uv run ruff format --check . # format check
 uv run memauthy --version    # or: uv run python -m memauthy --version
 ```
 
+## Contributing and design decisions
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the issue → branch → PR workflow and project rules,
+and [docs/decisions/](docs/decisions/) for architecture decision records.
+
 ## License
 
 [MIT](LICENSE)
