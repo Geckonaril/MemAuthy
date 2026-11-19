@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          submodules: recursive
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
@@ -44,3 +46,21 @@ jobs:
       - run: uv sync --locked
       - run: uv run python --version
       - run: uv run pytest -q
+
+  benchmark:
+    name: Benchmark (offline validation)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      # Public Hugging Face dataset at the pinned revision; no API key, no model calls.
+      - run: uv run python -m memauthy bench download
+      - run: uv run python -m memauthy bench validate
+      - run: uv run pytest -q -m benchmark
+      - name: Submodule must stay unmodified
+        run: test -z "$(git -C third_party/MemHarmBench status --porcelain)"

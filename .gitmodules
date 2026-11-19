@@ -1,0 +1,3 @@
+[submodule "third_party/MemHarmBench"]
+	path = third_party/MemHarmBench
+	url = https://github.com/Kirito14IT/MemHarmBench.git

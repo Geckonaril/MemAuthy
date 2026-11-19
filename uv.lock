@@ -63,6 +63,7 @@ wheels = [
 name = "memauthy"
 version = "0.1.0.dev0"
 source = { editable = "." }
+default-groups = ["bench", "dev"]
 dependencies = [
     { name = "pydantic" },
     { name = "pyyaml" },
@@ -70,6 +71,9 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
+bench = [
+    { name = "memharmbench" },
+]
 dev = [
     { name = "pytest" },
     { name = "ruff" },
@@ -83,10 +87,20 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+bench = [{ name = "memharmbench", editable = "third_party/MemHarmBench" }]
 dev = [
     { name = "pytest", specifier = ">=8.0" },
     { name = "ruff", specifier = ">=0.6" },
 ]
+
+[[package]]
+name = "memharmbench"
+version = "8.4.3"
+source = { editable = "third_party/MemHarmBench" }
+
+[package.metadata]
+requires-dist = [{ name = "pytest", marker = "extra == 'dev'", specifier = ">=8,<10" }]
+provides-extras = ["dev"]
 
 [[package]]
 name = "packaging"
