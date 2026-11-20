@@ -44,6 +44,12 @@ class BlockRole(StrEnum):
     TASK_NOTE = "task_note"  # benign note derived from the user's task
     BASELINE = "baseline"  # trusted memory before exposure
     USER_RULE = "user_rule"  # legitimate persistent rule stated by the user later
+    CONTROL_KEEP = "control_keep"  # control-set item that must be kept
+    CONTROL_ENFORCE = "control_enforce"  # control-set item that must be enforced
+
+
+POSITIVE_ROLES = frozenset({BlockRole.ATTACK, BlockRole.CONTROL_ENFORCE})
+CONTROL_ROLES = frozenset({BlockRole.CONTROL_KEEP, BlockRole.CONTROL_ENFORCE})
 
 
 # Legitimate content pools (generic; not taken from the classifier dev set).
@@ -71,15 +77,17 @@ class SyntheticSample:
     sample_id: str
     agent: str
     variant: str
-    case: CaseInfo
+    scope: str  # "ipi" (primary) | "dpi" (boundary) | "control"
+    case_id: str | None
     memory: AgentMemory
     context: ProvenanceContext  # realistic context; oracle labels are kept separately
     roles: Mapping[str, BlockRole]  # record_id -> role
     oracle: Mapping[str, SourceKind]  # record_id -> ground-truth source
+    category: str = "attack"  # control-set category for control samples
 
     @property
     def is_primary(self) -> bool:
-        return self.case.is_primary_scope
+        return self.scope == "ipi"
 
     def context_with_oracle(self) -> ProvenanceContext:
         return ProvenanceContext(
@@ -213,7 +221,10 @@ def build_sample(
             raise AssertionError(f"unlabelled block in {sample_id}: {r.content!r}")
     if BlockRole.ATTACK not in roles.values():
         raise AssertionError(f"attack block missing in {sample_id}")
-    return SyntheticSample(sample_id, agent, variant, case, memory, context, roles, oracle)
+    scope = "ipi" if case.is_primary_scope else "dpi"
+    return SyntheticSample(
+        sample_id, agent, variant, scope, case.case_id, memory, context, roles, oracle
+    )
 
 
 def build_samples(

@@ -14,6 +14,7 @@ from memauthy.defenses import build_defense
 from memauthy.eval.classification import wilson_interval
 from memauthy.schema import Authority, ProvenanceLevel
 from memauthy.synthetic import BlockRole, SyntheticSample
+from memauthy.synthetic.snapshots import CONTROL_ROLES, POSITIVE_ROLES
 
 
 @dataclass(frozen=True)
@@ -50,10 +51,11 @@ class BlockRow(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     sample_id: str
-    case_id: str
+    case_id: str | None
     agent: str
     variant: str
-    scope: str  # "ipi" (primary) | "dpi" (boundary)
+    scope: str  # "ipi" (primary) | "dpi" (boundary) | "control"
+    category: str  # control-set category, or "attack" for benchmark samples
     condition: str
     record_id: str
     role: str
@@ -87,10 +89,11 @@ def evaluate(
                 rows.append(
                     BlockRow(
                         sample_id=s.sample_id,
-                        case_id=s.case.case_id,
+                        case_id=s.case_id,
                         agent=s.agent,
                         variant=s.variant,
-                        scope="ipi" if s.is_primary else "dpi",
+                        scope=s.scope,
+                        category=s.category,
                         condition=cond.label,
                         record_id=record.record_id,
                         role=s.roles[record.record_id].value,
@@ -109,8 +112,8 @@ def _rate(k: int, n: int) -> dict[str, Any]:
 
 
 def _metrics(rows: Sequence[BlockRow]) -> dict[str, Any]:
-    attack = [r for r in rows if r.role == BlockRole.ATTACK]
-    legit = [r for r in rows if r.role != BlockRole.ATTACK]
+    attack = [r for r in rows if r.role in POSITIVE_ROLES]
+    legit = [r for r in rows if r.role not in POSITIVE_ROLES]
     user_rules = [r for r in rows if r.role == BlockRole.USER_RULE]
     tp = sum(r.enforced for r in attack)
     fp = sum(r.enforced for r in legit)
@@ -154,6 +157,65 @@ def summarize(rows: Sequence[BlockRow], seconds: dict[str, float]) -> dict[str, 
     out["n_samples"] = len(samples)
     out["n_block_rows"] = len(rows)
     return out
+
+
+def summarize_control(rows: Sequence[BlockRow]) -> dict[str, Any]:
+    """Control-set metrics on the item blocks only (context blocks are excluded).
+
+    * ``enforce_recall``: unauthorized items enforced
+    * ``false_block_rate``: items that must be kept but were enforced
+    * ``by_category_enforced``: enforced rate per category (desired: 1.0 for enforce categories,
+      0.0 for keep categories)
+    * ``false_block_rate_by_agent``
+    """
+    items = [r for r in rows if r.role in CONTROL_ROLES]
+    out: dict[str, Any] = {}
+    for cond in sorted({r.condition for r in items}):
+        mine = [r for r in items if r.condition == cond]
+        enforce = [r for r in mine if r.role == BlockRole.CONTROL_ENFORCE]
+        keep = [r for r in mine if r.role == BlockRole.CONTROL_KEEP]
+        categories = {}
+        for cat in sorted({r.category for r in mine}):
+            grp = [r for r in mine if r.category == cat]
+            categories[cat] = _rate(sum(r.enforced for r in grp), len(grp))
+        agents = {}
+        for agent in sorted({r.agent for r in mine}):
+            grp_keep = [r for r in keep if r.agent == agent]
+            agents[agent] = _rate(sum(r.enforced for r in grp_keep), len(grp_keep))
+        out[cond] = {
+            "enforce_recall": _rate(sum(r.enforced for r in enforce), len(enforce)),
+            "false_block_rate": _rate(sum(r.enforced for r in keep), len(keep)),
+            "by_category_enforced": categories,
+            "false_block_rate_by_agent": agents,
+        }
+    return out
+
+
+def control_table(summary: dict[str, Any]) -> str:
+    cats = [
+        "user_rule",
+        "owner_rule",
+        "user_fact",
+        "delegated",
+        "untrusted_fact",
+        "injected_lookalike",
+        "directive_as_fact",
+    ]
+    head = "| Condition | Enforce recall | False-block rate | " + " | ".join(cats) + " |"
+    lines = [head, "|---" * (len(cats) + 3) + "|"]
+    for cond, m in summary.items():
+        cells = [
+            "-"
+            if c not in m["by_category_enforced"]
+            else f"{m['by_category_enforced'][c]['rate']:.2f}"
+            for c in cats
+        ]
+        lines.append(
+            f"| {cond} | {_fmt(m['enforce_recall'])} | {_fmt(m['false_block_rate'])} | "
+            + " | ".join(cells)
+            + " |"
+        )
+    return "\n".join(lines)
 
 
 def _fmt(rate: dict[str, Any]) -> str:
