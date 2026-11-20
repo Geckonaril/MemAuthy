@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1",
+  "run_id": "20261120T092353Z-adaptive-v01-05788f44",
+  "components": [
+    {
+      "component": "audit:D0",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.04349869902944192,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D2",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 22.16564270129311,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P0",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 16.493649600743083,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P1",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 23.047611199319363,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P2",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 29.408112900186097,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P3+act",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 16.79101280195755,
+      "usd": 0.0
+    },
+    {
+      "component": "build_samples",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 15.899617899995064,
+      "usd": 0.0
+    },
+    {
+      "component": "evaluate",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 125.23613420000765,
+      "usd": 0.0
+    }
+  ],
+  "total": {
+    "component": "total",
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "seconds": 249.08528000253136,
+    "usd": 0.0
+  }
+}
