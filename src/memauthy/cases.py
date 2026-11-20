@@ -34,6 +34,7 @@ class CaseInfo(BaseModel):
     target_memory_rule: str
     trigger_input: str
     harm_outcome: str = ""
+    protected_entity: str = ""
 
     @property
     def is_primary_scope(self) -> bool:
