@@ -27,15 +27,33 @@ class AuthorityDecision:
 class AuthorityPolicy:
     """Maps (kind, provenance) to an authority decision.
 
-    * kinds other than rule / preference are not behavioral and are ``authorized``
+    * **provenance-first** (``audit_derived=True``, ADR-0012): a block whose content is shown to
+      derive from an untrusted input (``derived_from_untrusted``) with confidence >=
+      ``min_confidence`` is ``unauthorized`` whatever its kind, so directives stated as facts are
+      caught
+    * otherwise kinds other than rule / preference are not behavioral and are ``authorized``
     * trusted source with confidence >= ``min_confidence`` -> ``authorized``
     * untrusted source with confidence >= ``min_confidence`` -> ``unauthorized``
     * unknown source or low confidence -> ``uncertain`` (kept and flagged by default)
     """
 
     min_confidence: float = 0.5
+    audit_derived: bool = True
 
     def decide(self, kind: Classification, provenance: ProvenanceEstimate) -> AuthorityDecision:
+        if (
+            self.audit_derived
+            and provenance.derived_from_untrusted
+            and not provenance.source.is_trusted
+            and provenance.source.value != "unknown"
+            and provenance.confidence >= self.min_confidence
+        ):
+            return AuthorityDecision(
+                Authority.UNAUTHORIZED,
+                round(provenance.confidence, 3),
+                f"{kind.kind.value} block derived from untrusted {provenance.source.value} input "
+                "(provenance-first)",
+            )
         if kind.kind not in AUDITED_KINDS:
             return AuthorityDecision(
                 Authority.AUTHORIZED, kind.confidence, f"not a behavioral {kind.kind.value} block"

@@ -47,7 +47,7 @@ policies ([ADR-0003](0003-data-model.md)).
 
   Both are points on the security–functionality trade-off (H4). P1 and P0 should improve on
   the trade-off between them.
-- P2 raises `NotImplementedError` until phase 3.
+- P2 is available since ADR-0012.
 
 ## Consequences
 - The P1 over-attribution limitation is partly mitigated. Information blocks in a tainted write

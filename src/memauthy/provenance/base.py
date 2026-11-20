@@ -22,6 +22,10 @@ class ProvenanceEstimate(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     evidence: tuple[str, ...] = ()  # e.g. transcript event refs
     rationale: str = ""
+    # Positive evidence that the block's *content* derives from an untrusted input
+    # (True), from a trusted one (False), or no content evidence (None). Drives the
+    # provenance-first rule (ADR-0012): untrusted-derived blocks are audited whatever their kind.
+    derived_from_untrusted: bool | None = None
 
 
 @dataclass(frozen=True)

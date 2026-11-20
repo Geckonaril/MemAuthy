@@ -60,6 +60,7 @@ class OracleProvenance:
                 source=source or SourceKind.UNKNOWN,
                 confidence=1.0 if source else 0.0,
                 rationale="P0: oracle label" if source else "P0: no oracle label",
+                derived_from_untrusted=(not source.is_trusted) if source else None,
             )
         return out
 
