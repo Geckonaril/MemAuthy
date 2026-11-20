@@ -33,12 +33,13 @@ def _snapshot():
 
 @pytest.mark.parametrize("name", AVAILABLE)
 def test_registry_builds_protocol_conforming_defenses(name: str) -> None:
-    d = build_defense(name)
+    options = {"client": object()} if name == "D3" else {}  # D3 needs an LLM client
+    d = build_defense(name, **options)
     assert isinstance(d, MemoryDefense) and d.name == name
 
 
 def test_registry_errors() -> None:
-    with pytest.raises(NotImplementedError, match="D3"):
+    with pytest.raises(ValueError, match="client"):
         build_defense("D3")
     with pytest.raises(ValueError, match="unknown defense"):
         build_defense("D9")

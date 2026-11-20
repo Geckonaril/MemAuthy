@@ -38,3 +38,6 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Local LLM response cache (resumable D3 runs)
+.cache/
