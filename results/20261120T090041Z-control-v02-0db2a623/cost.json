@@ -1,0 +1,94 @@
+{
+  "schema_version": "0.1",
+  "run_id": "20261120T090041Z-control-v02-0db2a623",
+  "components": [
+    {
+      "component": "audit:D0",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.001165799971204251,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D1",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.34315669964416884,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D2",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.5390743998868857,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P0",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.39429149992065504,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P1",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.5643022998119704,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P2",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.7423699002538342,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P3",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.38147180021042004,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P3+act",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.4339507003314793,
+      "usd": 0.0
+    },
+    {
+      "component": "build_samples",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.2267336999939289,
+      "usd": 0.0
+    },
+    {
+      "component": "evaluate",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 4.059002800000599,
+      "usd": 0.0
+    }
+  ],
+  "total": {
+    "component": "total",
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "seconds": 7.685519600025145,
+    "usd": 0.0
+  }
+}

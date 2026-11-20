@@ -158,11 +158,16 @@ def test_transcript_argument_is_added_to_context() -> None:
     assert _decision(result, mem.snapshot, "ARCHIVE").authority is Authority.UNAUTHORIZED
 
 
-def test_unavailable_level_raises() -> None:
-    with pytest.raises(NotImplementedError, match="P2"):
-        ProvenanceAuthorityDefense().audit(
-            claude_code.from_files(FILES, snapshot_id="s").snapshot, None, ProvenanceLevel.P2
-        )
+def test_all_levels_available() -> None:
+    mem, ctx = _setup()
+    for level in ProvenanceLevel:
+        ctx_level = ctx
+        if level is ProvenanceLevel.P0:
+            ctx_level = ProvenanceContext(
+                oracle={r.record_id: SourceKind.USER for r in mem.snapshot.records}
+            )
+        result = ProvenanceAuthorityDefense(context=ctx_level).audit(mem.snapshot, None, level)
+        assert len(result.decisions) == len(mem.snapshot.records)
 
 
 def test_openclaw_bootstrap_rules_authorized_at_p1_uncertain_at_p3() -> None:

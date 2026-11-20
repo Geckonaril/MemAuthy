@@ -15,3 +15,4 @@ Short records of significant design decisions. Template: [0000-template.md](0000
 | [0009](0009-authority-policy-and-d4.md) | Authority policy and the D4 defense | Accepted |
 | [0010](0010-baseline-defenses.md) | Baseline defenses D1 and D2 | Accepted |
 | [0011](0011-synthetic-offline-detection.md) | Synthetic snapshots for offline detection | Accepted |
+| [0012](0012-p2-taint-and-provenance-first.md) | P2 transcript taint and the provenance-first rule | Accepted |

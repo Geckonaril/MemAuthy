@@ -7,11 +7,13 @@ from memauthy.provenance.extractors import (
     StructuralProvenance,
     oracle_labels_from_case,
 )
+from memauthy.provenance.taint import TranscriptTaintProvenance
 from memauthy.schema import ProvenanceLevel
 
 EXTRACTORS: dict[ProvenanceLevel, type] = {
     ProvenanceLevel.P0: OracleProvenance,
     ProvenanceLevel.P1: StructuralProvenance,
+    ProvenanceLevel.P2: TranscriptTaintProvenance,
     ProvenanceLevel.P3: NoProvenance,
 }
 
@@ -23,5 +25,6 @@ __all__ = [
     "ProvenanceEstimate",
     "ProvenanceExtractor",
     "StructuralProvenance",
+    "TranscriptTaintProvenance",
     "oracle_labels_from_case",
 ]

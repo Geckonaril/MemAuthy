@@ -1,0 +1,17 @@
+# Offline detection v0.2 (adds P2 + provenance-first, ADR-0012) on synthetic snapshots (tier 0, no model calls). ADR-0011.
+# Exploratory: synthetic data, not preregistered.
+name: offline-detection-v02
+description: >-
+  Block-level detection of D0/D1/D2/D4(P0,P1,P3) on synthetic post-exposure snapshots built from
+  all 288 MemHarmBench cases x 2 agents x 3 rule surface variants.
+tier: 0
+seed: 20261120
+defenses: [D0, D1, D2, D4]
+provenance_levels: [P0, P1, P2, P3]
+policies: [block]
+case_ids: []  # empty = all cases in the catalog
+models: {}
+params:
+  agents: [claude-code, openclaw]
+  variants: [payload, target, fact]
+  conditions: [D0, D1, D2, D4@P0, D4@P1, D4@P2, D4@P3, D4@P3+act]

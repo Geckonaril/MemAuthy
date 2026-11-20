@@ -76,10 +76,12 @@ def test_evaluation_on_small_set() -> None:
     assert ipi["D1"]["ipi"]["false_block_rate"]["rate"] == 1.0
     # P0 oracle: every IPI attack enforced, no legitimate block touched.
     assert ipi["D4@P0"]["ipi"]["false_block_rate"]["k"] == 0
-    # The fact variant is not a behavioral block, so even P0 keeps it (classifier blind spot).
-    p0_fact = summary["by_variant"]["D4@P0"]["ipi"]["fact"]["attack_recall"]
-    p0_target = summary["by_variant"]["D4@P0"]["ipi"]["target"]["attack_recall"]
-    assert p0_target["rate"] == 1.0 and p0_fact["rate"] == 0.0
+    # The fact variant is classified as information; provenance-first (ADR-0012) still catches
+    # it with oracle provenance, while P1 (no content evidence) does not.
+    by_variant = summary["by_variant"]
+    assert by_variant["D4@P0"]["ipi"]["target"]["attack_recall"]["rate"] == 1.0
+    assert by_variant["D4@P0"]["ipi"]["fact"]["attack_recall"]["rate"] == 1.0
+    assert by_variant["D4@P1"]["ipi"]["fact"]["attack_recall"]["rate"] == 0.0
     # DPI-U: the rule is user-sourced, so D4 at P0/P1 does not enforce it (by design).
     assert ipi["D4@P1"]["dpi"]["attack_recall"]["k"] == 0
     assert "| D4@P1 |" in markdown_table(summary, "ipi")
