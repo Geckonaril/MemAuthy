@@ -129,6 +129,10 @@ class TranscriptEvent(_Frozen):
     tool_name: str | None = None
     timestamp: datetime | None = None
     memory_record_id: str | None = None  # set when this event writes a memory record
+    # Additive fields (schema 0.1 compatible): structural information from native logs.
+    kind: Literal["text", "tool_use", "tool_result"] | None = None
+    memory_file: str | None = None  # memory key written by this tool call, if any
+    event_ref: str | None = None  # benchmark reference, e.g. "native:<source>:<line>:<block>"
 
 
 class Transcript(_Frozen):
