@@ -13,3 +13,4 @@ Short records of significant design decisions. Template: [0000-template.md](0000
 | [0007](0007-rule-classifier.md) | Rule-based memory block classifier | Accepted |
 | [0008](0008-provenance-extractors.md) | Provenance extractors P0, P1, P3 | Accepted |
 | [0009](0009-authority-policy-and-d4.md) | Authority policy and the D4 defense | Accepted |
+| [0010](0010-baseline-defenses.md) | Baseline defenses D1 and D2 | Accepted |
