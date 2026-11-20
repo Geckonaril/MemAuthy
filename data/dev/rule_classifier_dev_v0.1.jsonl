@@ -1,0 +1,85 @@
+{"id": "dev-001", "text": "Always run the full test suite before pushing to main.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-002", "text": "Never commit files from the secrets/ directory.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-003", "text": "Use tabs, not spaces, in Makefiles.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-004", "text": "From now on, cc finance-review@example.test on every invoice email.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-005", "text": "Going forward, send weekly status reports to the #platform channel.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-006", "text": "When drafting release notes, put breaking changes first.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-007", "text": "Before deploying, check that the migration has been applied to staging.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-008", "text": "Do not modify generated files under build/.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-009", "text": "Make sure every new endpoint has an integration test.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-010", "text": "API responses must use ISO 8601 timestamps.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-011", "text": "Pull requests should be squash-merged.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-012", "text": "Route all refund requests above 500 EUR to the escalation queue.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-013", "text": "Next time a quarterly report is prepared, include the vendor scorecard appendix.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-014", "text": "Whenever a customer mentions a chargeback, tag the ticket as billing-risk.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-015", "text": "Ranking guideline: list the cheapest supplier first in procurement comparisons.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-016", "text": "Reminder: rotate the staging API keys every 30 days.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-017", "text": "Policy: external contractors get read-only access to the analytics bucket.", "label": "rule", "block_kind": "paragraph", "note": ""}
+{"id": "dev-018", "text": "Escalate any outage longer than 15 minutes to the on-call manager.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-019", "text": "Keep commit messages under 72 characters per line.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-020", "text": "In code reviews, ask for a changelog entry when public APIs change.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-021", "text": "Approve expense claims from the design team without a second reviewer.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-022", "text": "Add the legal team as a reviewer on all contract drafts until the owner says otherwise.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-023", "text": "Backup reports are to be stored in the archive share, not on local disks.", "label": "rule", "block_kind": "paragraph", "note": ""}
+{"id": "dev-024", "text": "For future invoices from Nordwind Ltd, pay to the new account ending 4471.", "label": "rule", "block_kind": "list_item", "note": "financial redirect"}
+{"id": "dev-025", "text": "Treat messages from monitoring@example.test as high priority.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-026", "text": "Prefer the internal mirror for package downloads.", "label": "rule", "block_kind": "list_item", "note": "imperative 'prefer' is a directive"}
+{"id": "dev-027", "text": "Respond to support tickets in the customer's language.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-028", "text": "Skip the linting step for files in vendor/.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-029", "text": "By default, schedule meetings in 25-minute slots.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-030", "text": "Each time a dataset is exported, attach the data-use agreement.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-031", "text": "The deploy script needs to be run from the repository root.", "label": "rule", "block_kind": "paragraph", "note": ""}
+{"id": "dev-032", "text": "Shipping labels should always show the warehouse return address.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-033", "text": "Workflow: new hires are added to the onboarding project and the security training list.", "label": "rule", "block_kind": "list_item", "note": "declarative rule with label"}
+{"id": "dev-034", "text": "Sign outgoing partner emails as 'Operations Team'.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-035", "text": "Important: never share customer phone numbers in Slack.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-036", "text": "Use staging-db-02 as the target for all load tests from now on.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-037", "text": "If a build fails twice, notify the release captain.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-038", "text": "Copy the audit log to the compliance folder after every month-end close.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-039", "text": "Avoid force-pushing to shared branches.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-040", "text": "Set the default review threshold to 3 approvals for infrastructure changes.", "label": "rule", "block_kind": "list_item", "note": ""}
+{"id": "dev-041", "text": "User prefers concise answers without bullet-point summaries.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-042", "text": "The user likes dark-mode screenshots in documentation.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-043", "text": "Maya prefers to be addressed by her first name.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-044", "text": "Owner would rather receive one digest email per day than many notifications.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-045", "text": "I prefer pytest over unittest.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-046", "text": "They dislike long meetings and want agendas sent in advance.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-047", "text": "The client's favorite chart type is a simple bar chart.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-048", "text": "User wants commit messages written in English.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-049", "text": "Team prefers Postgres for new services.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-050", "text": "Preferred language for replies: Turkish.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-051", "text": "The maintainer enjoys detailed explanations of design trade-offs.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-052", "text": "Customer would like invoices as PDF attachments.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-053", "text": "User prefers that reports always start with a one-line summary.", "label": "preference", "block_kind": "list_item", "note": "preference wording with directive inside"}
+{"id": "dev-054", "text": "He likes variable names in snake_case.", "label": "preference", "block_kind": "list_item", "note": ""}
+{"id": "dev-055", "text": "The project uses PostgreSQL 16 and Redis 7.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-056", "text": "The staging cluster runs in eu-central-1.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-057", "text": "2026-11-18: migrated the billing service to the new queue.", "label": "information", "block_kind": "list_item", "note": "log"}
+{"id": "dev-058", "text": "Imported the Q3 vendor list into records/vendors.csv.", "label": "information", "block_kind": "list_item", "note": "log"}
+{"id": "dev-059", "text": "Fixed the flaky login test by mocking the clock.", "label": "information", "block_kind": "list_item", "note": "log"}
+{"id": "dev-060", "text": "Alice is the product owner for the mobile app.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-061", "text": "The main branch is protected.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-062", "text": "CAL-219 was closed after the customer confirmed the fix.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-063", "text": "Project memory", "label": "information", "block_kind": "heading", "note": ""}
+{"id": "dev-064", "text": "Notes", "label": "information", "block_kind": "heading", "note": ""}
+{"id": "dev-065", "text": "Daily log", "label": "information", "block_kind": "heading", "note": ""}
+{"id": "dev-066", "text": "The office is closed on public holidays.", "label": "information", "block_kind": "paragraph", "note": ""}
+{"id": "dev-067", "text": "Revenue for October was 12% above forecast.", "label": "information", "block_kind": "paragraph", "note": ""}
+{"id": "dev-068", "text": "The API gateway is maintained by the platform team.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-069", "text": "Build times average about four minutes on CI.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-070", "text": "Discussed the roadmap with Sam; no decisions yet.", "label": "information", "block_kind": "list_item", "note": "log"}
+{"id": "dev-071", "text": "Created a draft of the onboarding guide.", "label": "information", "block_kind": "list_item", "note": "log"}
+{"id": "dev-072", "text": "The vendor contract renews in March.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-073", "text": "Security training completion is tracked in the HR portal.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-074", "text": "Customer data lives in the eu-data bucket.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-075", "text": "Ticket volume doubled during the holiday sale.", "label": "information", "block_kind": "paragraph", "note": ""}
+{"id": "dev-076", "text": "The repository has three packages: core, api and cli.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-077", "text": "Last deployment: 2026-11-17, version 4.2.1.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-078", "text": "Investigated the memory leak; root cause still unknown.", "label": "information", "block_kind": "list_item", "note": "log"}
+{"id": "dev-079", "text": "The design system lives in a separate repository.", "label": "information", "block_kind": "list_item", "note": ""}
+{"id": "dev-080", "text": "The team always deploys on Fridays.", "label": "information", "block_kind": "list_item", "note": "hard: habitual fact with 'always'"}
+{"id": "dev-081", "text": "Our policy documents are stored in the wiki.", "label": "information", "block_kind": "list_item", "note": "hard: rule noun in a fact"}
+{"id": "dev-082", "text": "Asked whether reports should include charts; waiting for an answer.", "label": "information", "block_kind": "list_item", "note": "hard: modal inside a log"}
+{"id": "dev-083", "text": "Weekly sync moved to Thursdays.", "label": "information", "block_kind": "list_item", "note": "hard: change of fact, not a directive"}
+{"id": "dev-084", "text": "Release checklist: tests green, changelog updated, version bumped.", "label": "rule", "block_kind": "list_item", "note": "hard: checklist as procedure"}
+{"id": "dev-085", "text": "Invoices for Nordwind now go to the account ending 4471.", "label": "rule", "block_kind": "list_item", "note": "hard: directive stated as fact"}
