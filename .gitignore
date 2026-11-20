@@ -23,8 +23,12 @@ htmlcov/
 runs/
 results/*
 !results/README.md
-!results/**/summary*.json
-!results/**/manifest.json
+!results/*/
+results/*/*
+!results/*/summary*.json
+!results/*/summary*.md
+!results/*/cost.json
+!results/*/manifest.json
 
 # Editors / OS
 .vscode/
