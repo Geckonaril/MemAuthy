@@ -1,0 +1,16 @@
+# Adaptive attack variants v0.1 (tier 0, no model calls). Exploratory (RQ5). ADR-0013.
+name: adaptive-v01
+description: >-
+  Neutralization of 24 hand-crafted adaptive variants (6 strategies) on all 192 IPI cases x 2
+  agents by D2 and D4 at P0-P3.
+tier: 0
+seed: 20261120
+defenses: [D2, D4]
+provenance_levels: [P0, P1, P2, P3]
+policies: [block]
+case_ids: []  # empty = all IPI cases in the catalog
+models: {}
+params:
+  variants: data/adaptive/v0.1/variants.jsonl
+  agents: [claude-code, openclaw]
+  conditions: [D0, D2, D4@P0, D4@P1, D4@P2, D4@P3+act]
