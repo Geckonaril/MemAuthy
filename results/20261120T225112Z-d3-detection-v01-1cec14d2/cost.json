@@ -1,0 +1,78 @@
+{
+  "schema_version": "0.1",
+  "run_id": "20261120T225112Z-d3-detection-v01-1cec14d2",
+  "components": [
+    {
+      "component": "audit:D0",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.0012281009694561362,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D2",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.6308583001373336,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D3",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 445.3961957002757,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P1",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.881024400528986,
+      "usd": 0.0
+    },
+    {
+      "component": "audit:D4@P2",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 1.2974585003685206,
+      "usd": 0.0
+    },
+    {
+      "component": "build_samples",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 0.4730433999793604,
+      "usd": 0.0
+    },
+    {
+      "component": "evaluate",
+      "calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "seconds": 448.7658558000112,
+      "usd": 0.0
+    },
+    {
+      "component": "llm:llama3.1:8b",
+      "calls": 158,
+      "input_tokens": 45080,
+      "output_tokens": 4451,
+      "seconds": 444.8422009999049,
+      "usd": 0.0
+    }
+  ],
+  "total": {
+    "component": "total",
+    "calls": 158,
+    "input_tokens": 45080,
+    "output_tokens": 4451,
+    "seconds": 1342.2878652021755,
+    "usd": 0.0
+  }
+}
