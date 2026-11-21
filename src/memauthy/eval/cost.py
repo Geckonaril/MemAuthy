@@ -13,7 +13,12 @@ from memauthy.schema import SCHEMA_VERSION, AuditCost
 
 
 class CostRecord(BaseModel):
-    """Accumulated cost of one component (e.g. "agent", "judge", "defense:D3")."""
+    """Accumulated cost of one component (e.g. "agent", "judge", "defense:D3").
+
+    ``within`` names the component whose wall-clock time already contains this one (e.g.
+    ``audit:D3`` is timed inside ``evaluate``). Nested components are reported but their
+    ``seconds`` are not added to the total again.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -23,6 +28,7 @@ class CostRecord(BaseModel):
     output_tokens: int = Field(default=0, ge=0)
     seconds: float = Field(default=0.0, ge=0)
     usd: float = Field(default=0.0, ge=0)
+    within: str | None = None
 
 
 class CostLog(BaseModel):
@@ -55,8 +61,11 @@ class CostTracker:
         output_tokens: int = 0,
         seconds: float = 0.0,
         usd: float = 0.0,
+        within: str | None = None,
     ) -> None:
         rec = self._get(component)
+        if within is not None:
+            rec.within = within
         rec.calls += calls
         rec.input_tokens += input_tokens
         rec.output_tokens += output_tokens
@@ -74,23 +83,32 @@ class CostTracker:
         )
 
     @contextmanager
-    def timed(self, component: str) -> Iterator[None]:
+    def timed(self, component: str, *, within: str | None = None) -> Iterator[None]:
         """Add the wall-clock time of the ``with`` block to ``component``."""
         start = time.perf_counter()
         try:
             yield
         finally:
-            self.add(component, seconds=time.perf_counter() - start)
+            self.add(component, seconds=time.perf_counter() - start, within=within)
 
     def to_log(self) -> CostLog:
+        """Totals: seconds from top-level components only; calls, tokens and USD from all.
+
+        Each call, token and dollar must therefore be recorded on exactly one component.
+        """
         components = [r.model_copy() for r in sorted(self._records.values(), key=_by_name)]
+        names = {r.component for r in components}
+        for r in components:
+            if r.within is not None and r.within not in names:
+                raise ValueError(f"{r.component!r} is nested in unknown component {r.within!r}")
         total = CostRecord(component="total")
         for r in components:
             total.calls += r.calls
             total.input_tokens += r.input_tokens
             total.output_tokens += r.output_tokens
-            total.seconds += r.seconds
             total.usd += r.usd
+            if r.within is None:
+                total.seconds += r.seconds
         return CostLog(run_id=self.run_id, components=components, total=total)
 
     def write(self, run_dir: str | Path) -> Path:

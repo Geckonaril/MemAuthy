@@ -90,6 +90,28 @@ def test_cost_tracker_timed_and_sorted() -> None:
     assert log.components[1].seconds >= 0.0
 
 
+def test_cost_total_does_not_double_count_nested_time() -> None:
+    """Issue #43: nested timers are reported but counted once in the total."""
+    tracker = CostTracker("r")
+    tracker.add("build_samples", seconds=1.0)
+    tracker.add("evaluate", seconds=10.0)
+    tracker.add("audit:D3", seconds=9.0, within="evaluate")
+    tracker.add("audit:D2", seconds=0.5, within="evaluate")
+    tracker.add("llm:m", calls=3, input_tokens=30, output_tokens=6, seconds=8.0, within="audit:D3")
+    log = tracker.to_log()
+    assert log.total.seconds == pytest.approx(11.0)
+    assert (log.total.calls, log.total.input_tokens, log.total.output_tokens) == (3, 30, 6)
+    by = {c.component: c for c in log.components}
+    assert by["llm:m"].within == "audit:D3" and by["evaluate"].within is None
+
+
+def test_cost_nested_in_unknown_component_is_rejected() -> None:
+    tracker = CostTracker("r")
+    tracker.add("audit:D3", seconds=1.0, within="evaluate")
+    with pytest.raises(ValueError, match="unknown component"):
+        tracker.to_log()
+
+
 def test_seed_everything_is_deterministic() -> None:
     seed_everything(42)
     first = [random.random() for _ in range(3)]

@@ -16,6 +16,9 @@ must be traceable to the exact code, benchmark, configuration, model and cases t
   timestamps, and case IDs.
 - Every run writes `results/<run_id>/cost.json`: input/output tokens, wall-clock time, and USD
   cost, per component and in total.
+  A component timed inside another one records it in `within` (e.g. `audit:D3` within
+  `evaluate`, `llm:*` within `audit:D3`); the total adds only top-level seconds, while calls,
+  tokens and USD are each recorded on exactly one component (issue #43).
 - All randomness is seeded from the config.
 - Raw outputs stay out of Git; manifests and summaries are committed. Analysis code regenerates
   every table and figure from raw results with a single command.
