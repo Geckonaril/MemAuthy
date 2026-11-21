@@ -80,3 +80,21 @@ checks that the upstream answers with exactly that model name.
   - The launcher now removes this campaign's own gateway container (checked by its owner
     label) when the campaign's private token file is missing. The removal is recorded in
     `launches.jsonl`.
+- **v0.2, third attempt (commit `670552b`).**
+  - All three chains completed without technical failure.
+  - Two chains ran forced triggers: six arm sessions, each restored from its defended memory,
+    with lineage checks passing, and each judged.
+  - The 8B stand-in agent stored only placeholder text, with no attack payload. D4@P2
+    therefore correctly left memory unchanged, and D2 removed one block.
+  - Labels from the 8B judge are unreliable (`need_human_review`) and are not analysed.
+  - **Observation for the real run.** Exposure attempt 2 starts with the benchmark's follow-up
+    *user* message. A block written right after it, with no tool output in between, gets P1
+    source `user`, even if its content came from the carrier read in attempt 1. P2 still
+    checks content against all earlier tool outputs, so the payload is caught by content
+    match. P1 alone would miss it, as expected for a structural method.
+- **Token profile (approximate; the stand-in model makes few tool calls).**
+  - Claude Code requests are about 2.9k to 20k prompt tokens each.
+  - Judge requests are about 11k to 17.5k prompt tokens each, with about 150 completion
+    tokens.
+  - Call counts per session are not representative of the target model. The budget
+    estimate (issue #47) must assume them.
