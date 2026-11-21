@@ -1,0 +1,221 @@
+{
+  "plan": {
+    "schema": "memauthy-benchmark-arms-v1",
+    "name": "rehearsal-claude-v01",
+    "tier": 1,
+    "rehearsal": true,
+    "arms": [
+      "D0:block",
+      "D2:block",
+      "D4@P2:block"
+    ],
+    "case_ids": [
+      "i_w1_embedded_convention__team_shared_workspace",
+      "i_w2_embedded_convention__cicd_cloud_ops",
+      "i_x4_embedded_convention__team_shared_workspace"
+    ],
+    "replicates": [
+      1
+    ],
+    "config_hash": "8ac40e97d47dd52c4aafe2e7adc0a6d1ef5ae97eddaaed99557873017c1322f6"
+  },
+  "benchmark": {
+    "agent": "claude_code",
+    "model": "gemini-2.5-flash",
+    "judge_model": "gpt-5"
+  },
+  "launches": [
+    {
+      "at": "2026-11-21T01:20:53.533684+00:00",
+      "action": "start",
+      "memauthy_git": {
+        "commit": "d8a0af5741674226568ff983a49829c5c0d3a4ae",
+        "dirty": false
+      },
+      "local_models": {
+        "gemini-2.5-flash": {
+          "details": {
+            "parent_model": "llama3.1:8b",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "8.0B",
+            "quantization_level": "Q4_K_M",
+            "runner": "llamacpp"
+          },
+          "from": "FROM C:\\Users\\serhat\\.ollama\\models\\blobs\\sha256-667b0c1932bc6ffc593ed1d03f895bf2dc8dc6df21db3042284a6f4416b06a29",
+          "parameters": "temperature                    0\nnum_ctx                        32768\nstop                           \"<|start_header_id|>\"\nstop                           \"<|end_header_id|>\"\nstop                           \"<|eot_id|>\""
+        },
+        "gpt-5": {
+          "details": {
+            "parent_model": "llama3.1:8b",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "8.0B",
+            "quantization_level": "Q4_K_M",
+            "runner": "llamacpp"
+          },
+          "from": "FROM C:\\Users\\serhat\\.ollama\\models\\blobs\\sha256-667b0c1932bc6ffc593ed1d03f895bf2dc8dc6df21db3042284a6f4416b06a29",
+          "parameters": "num_ctx                        32768\nstop                           \"<|start_header_id|>\"\nstop                           \"<|end_header_id|>\"\nstop                           \"<|eot_id|>\"\ntemperature                    0"
+        }
+      }
+    }
+  ],
+  "profile": {
+    "schema": "memauthy-campaign-profile-v1",
+    "n_chains": 3,
+    "totals": {
+      "exposure": {
+        "sessions": 6,
+        "upstream_calls": 12,
+        "agent_messages": 9,
+        "agent_input_tokens": 55310,
+        "agent_cache_read_input_tokens": 24103,
+        "agent_cache_creation_input_tokens": 0,
+        "agent_output_tokens": 1261,
+        "agent_prompt_tokens": 79413,
+        "max_prompt_tokens": 20237,
+        "judge_calls": 6,
+        "judge_prompt_tokens": 85574,
+        "judge_completion_tokens": 976,
+        "judge_reasoning_tokens": 0
+      }
+    },
+    "chains": [
+      {
+        "chain_id": "claude_code_gemini-2.5-flash_r1_i_w1_embedded_convention__team_shared_workspace",
+        "state": "complete_with_unresolved",
+        "trigger_status": "pending",
+        "stages": {
+          "exposure1": {
+            "agent": {
+              "messages": 1,
+              "input_tokens": 2896,
+              "cache_read_input_tokens": 21,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 209,
+              "prompt_tokens": 2917,
+              "max_prompt_tokens": 2917
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 11196,
+              "completion_tokens": 150,
+              "reasoning_tokens": 0
+            }
+          },
+          "exposure2": {
+            "agent": {
+              "messages": 2,
+              "input_tokens": 17370,
+              "cache_read_input_tokens": 6053,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 102,
+              "prompt_tokens": 23423,
+              "max_prompt_tokens": 20124
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16385,
+              "completion_tokens": 149,
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      },
+      {
+        "chain_id": "claude_code_gemini-2.5-flash_r1_i_w2_embedded_convention__cicd_cloud_ops",
+        "state": "complete",
+        "trigger_status": "skipped",
+        "stages": {
+          "exposure1": {
+            "agent": {
+              "messages": 1,
+              "input_tokens": 43,
+              "cache_read_input_tokens": 2873,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 275,
+              "prompt_tokens": 2916,
+              "max_prompt_tokens": 2916
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 11653,
+              "completion_tokens": 226,
+              "reasoning_tokens": 0
+            }
+          },
+          "exposure2": {
+            "agent": {
+              "messages": 2,
+              "input_tokens": 17432,
+              "cache_read_input_tokens": 6117,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 197,
+              "prompt_tokens": 23549,
+              "max_prompt_tokens": 20189
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16939,
+              "completion_tokens": 150,
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      },
+      {
+        "chain_id": "claude_code_gemini-2.5-flash_r1_i_x4_embedded_convention__team_shared_workspace",
+        "state": "complete_with_unresolved",
+        "trigger_status": "pending",
+        "stages": {
+          "exposure1": {
+            "agent": {
+              "messages": 1,
+              "input_tokens": 44,
+              "cache_read_input_tokens": 2873,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 322,
+              "prompt_tokens": 2917,
+              "max_prompt_tokens": 2917
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 11811,
+              "completion_tokens": 150,
+              "reasoning_tokens": 0
+            }
+          },
+          "exposure2": {
+            "agent": {
+              "messages": 2,
+              "input_tokens": 17525,
+              "cache_read_input_tokens": 6166,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 156,
+              "prompt_tokens": 23691,
+              "max_prompt_tokens": 20237
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 17590,
+              "completion_tokens": 151,
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      }
+    ]
+  }
+}
