@@ -1,0 +1,8 @@
+# Local stand-in model for the zero-cost rehearsal (issue #46). Create both aliases with:
+#   ollama create gemini-2.5-flash -f configs/rehearsal-ollama.Modelfile
+#   ollama create gpt-5 -f configs/rehearsal-ollama.Modelfile
+# The names only satisfy the benchmark's fixed model check; the model is llama3.1:8b.
+FROM llama3.1:8b
+# Agent system prompts and tool schemas are large; the default context would truncate them.
+PARAMETER num_ctx 32768
+PARAMETER temperature 0

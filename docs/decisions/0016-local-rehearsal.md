@@ -1,0 +1,60 @@
+# ADR-0016: Zero-cost local rehearsal of benchmark campaigns
+
+- **Status:** Accepted
+- **Date:** 2026-11-21
+
+## Context
+The paid budget can be spent once (decision of 2026-11-21). Before that run we need two things:
+
+- evidence that the whole chain works with the arms of ADR-0015: Docker images, gateway, native
+  memory capture, defense, per-arm triggers and the judge;
+- real call and token counts per stage, for the budget estimate (issue #47).
+
+The benchmark accepts only `gemini-2.5-flash`/`gpt-5` as model names and HTTPS endpoints, and
+checks that the upstream answers with exactly that model name.
+
+## Decision
+
+### Launcher: `experiments/benchmark_arms.py`
+- Control semantics are the same as the benchmark's `scripts/experiment.py`: `check`, `start`,
+  `status`, `pause`, `resume`, `retry`, a background worker and checkpoints.
+- The launcher imports the benchmark runtime and applies three in-process patches:
+  1. the job list is limited to the configured cases and replicates (the benchmark's own
+     864-chain check still runs on the full list);
+  2. `run_standard` is replaced by the arm runner of ADR-0015;
+  3. for rehearsals only, local `http://` endpoints pass the HTTPS check. The benchmark
+     validates a shadow copy of the config, and the real local URLs are used.
+- The worker is the same script with the hidden `_worker` action, so the patches also apply
+  there.
+- Outputs go to `runs/<name>/` (git-ignored):
+  - `benchmark.local.json` and `memauthy_run.json`: the plan, frozen on first use; a change
+    is refused, so a changed campaign needs a new name;
+  - `launches.jsonl`: one line per launch, with the MemAuthy git state and the local models
+    behind the model names.
+
+### Cost guard (`memauthy.benchrun.launch`)
+- Only tier-1 configs with `rehearsal: true` and local endpoints (`localhost`, `127.0.0.1`,
+  `host.docker.internal`) are accepted.
+- Tier 2 is refused until the budget cap (issue #47) exists. A rehearsal therefore cannot
+  reach a paid API by mistake.
+
+### Local stand-in models
+- `configs/rehearsal-ollama.Modelfile` creates the Ollama aliases `gemini-2.5-flash` and
+  `gpt-5` from `llama3.1:8b`, with `num_ctx` 32768 for the agents' large system prompts.
+- The names exist only to pass the benchmark's fixed model check. `launches.jsonl` records the
+  real base model.
+
+### Rehearsal configs
+- `configs/rehearsal-{claude,openclaw}-v0.1.yaml`: 3 IPI cases from distinct templates
+  (seeded), replicate 1, arms `D0`, `D2`, `D4@P2`.
+
+## Consequences
+- **Rehearsal outcomes are never analysed.** A small local model is a different agent; only
+  plumbing, failures and token use are read from it.
+- **Token counts are approximate.**
+  - Prompt sizes (system prompt, tools, memory, files) do not depend on the model, but the
+    tokenizer does.
+  - Turn counts and output lengths depend on the model.
+  - The budget estimate therefore uses a safety margin (issue #47).
+- D3 arms are not wired into campaigns yet (no LLM client option in the launcher).
+- The launcher runs on Windows only, like the benchmark's background control.
