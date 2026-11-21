@@ -73,6 +73,26 @@ llama3.1:8b, qwen3:8b and gemma3:4b, all with valid JSON output.
 
 D2 and D4 are rerun on the same subsets, so all conditions are compared on identical samples.
 
+## Observations at acceptance
+Runs on commit `c2ea5ea` (exploratory, synthetic, subset-based). No LLM errors; 1,099 uncached
+calls in total, about 2.8 s per call.
+
+| Measure | D2 | D3 | D4@P1 | D4@P2 |
+|---|---|---|---|---|
+| Control: enforce recall | 0.333 | 0.178 | 0.600 | 1.000 |
+| Control: false-block rate | 0.107 | 0.027 | 0.093 | 0.333 |
+| Detection (IPI): attack recall | 0.750 | 0.688 | 0.667 | 1.000 |
+| Detection (IPI): false-block rate | 0.060 | 0.033 | 0.000 | 0.000 |
+| Detection (IPI): recall on `fact` variant | 0.250 | 0.375 | 0.000 | 1.000 |
+| Adaptive: neutralized | 0.302 | 0.488 | 0.375 | 0.917 |
+
+- D3 is the most conservative content defense: few false blocks, but it misses most
+  identical-text look-alikes (0.13) and every `preference_disguise` variant.
+- On DPI-U (trusted user channel) D3 flags 0.812 of the rules. That is expected for a
+  content-only defense and is the boundary case D4 deliberately leaves alone.
+- The `cost.json` `total` row sums nested timers (`evaluate` contains `audit:*` and the LLM
+  time), so its `seconds` overstates wall-clock time; use the `llm:*` and `audit:*` rows.
+
 ## Consequences
 - D3 results are **subset-based and model-specific** (`llama3.1:8b`, `d3-v1`). A full run, or
   other models, are later additions.
