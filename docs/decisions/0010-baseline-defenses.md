@@ -40,8 +40,8 @@ share the `MemoryDefense` interface and are built through one registry.
   identifier (`ARCHIVE`, `CAL-`, …) appears in them.
 
 ### Registry
-`build_defense(name, context, **options)` builds D0, D1, D2 and D4. D3 raises
-`NotImplementedError` until phase 3.
+`build_defense(name, context, **options)` builds D0–D4. D3 needs an LLM client passed as
+`client=` (ADR-0014); without one it raises `ValueError`.
 
 ## Observations at acceptance
 - **Benchmark rules.** D2 flags 288/288 `target_memory_rule` and 288/288 `payload_text`,

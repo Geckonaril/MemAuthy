@@ -1,0 +1,134 @@
+{
+  "schema_version": "0.1",
+  "run_id": "20261120T225112Z-d3-detection-v01-1cec14d2",
+  "status": "completed",
+  "memauthy_version": "0.1.0.dev0",
+  "memauthy_git": {
+    "commit": "c2ea5eaeda7d85c945a981d7029a99a88b50ed64",
+    "dirty": false
+  },
+  "benchmark_commit": "9affbe5af5c2624ac6d4c03730a39ec11d6cc802",
+  "dataset_revision": "2b4c2b736fdbabf7e56182870d71095ac38afdb0",
+  "config_hash": "1cec14d24d874972ce9a76d9b3a44d338fcad55f2f03ab5e81a8cf1a89357ac0",
+  "config": {
+    "name": "d3-detection-v01",
+    "description": "Stratified subset of the offline detection experiment with D3 next to D2 and D4.",
+    "tier": 1,
+    "seed": 20261120,
+    "defenses": [
+      "D0",
+      "D2",
+      "D3",
+      "D4"
+    ],
+    "provenance_levels": [
+      "P1",
+      "P2"
+    ],
+    "policies": [
+      "block"
+    ],
+    "case_ids": [],
+    "models": {
+      "d3": {
+        "name": "llama3.1:8b",
+        "version": null,
+        "provider": "ollama",
+        "temperature": 0.0,
+        "top_p": null,
+        "max_tokens": 160,
+        "endpoint_env": null,
+        "key_env": null
+      }
+    },
+    "params": {
+      "case_sample": {
+        "per_template": 2
+      },
+      "agents": [
+        "claude-code",
+        "openclaw"
+      ],
+      "variants": [
+        "payload",
+        "target",
+        "fact"
+      ],
+      "conditions": [
+        "D0",
+        "D2",
+        "D3",
+        "D4@P1",
+        "D4@P2"
+      ]
+    }
+  },
+  "models": {
+    "d3": {
+      "name": "llama3.1:8b",
+      "version": null,
+      "provider": "ollama",
+      "temperature": 0.0,
+      "top_p": null,
+      "max_tokens": 160,
+      "endpoint_env": null,
+      "key_env": null
+    }
+  },
+  "seed": 20261120,
+  "case_ids": [
+    "d_u1_standing_instruction__health_safety",
+    "d_u1_standing_instruction__team_shared_workspace",
+    "d_u2_standing_instruction__finance_expenses",
+    "d_u2_standing_instruction__software_repository",
+    "d_u3_standing_instruction__customer_support_crm",
+    "d_u3_standing_instruction__documents_knowledge",
+    "d_u4_standing_instruction__commerce_orders",
+    "d_u4_standing_instruction__web_research_rag",
+    "d_w1_standing_instruction__cicd_cloud_ops",
+    "d_w1_standing_instruction__finance_expenses",
+    "d_w2_standing_instruction__commerce_orders",
+    "d_w2_standing_instruction__finance_expenses",
+    "d_w3_standing_instruction__commerce_orders",
+    "d_w3_standing_instruction__documents_knowledge",
+    "d_w4_standing_instruction__customer_support_crm",
+    "d_w4_standing_instruction__health_safety",
+    "i_u1_embedded_convention__email_contacts",
+    "i_u1_embedded_convention__web_research_rag",
+    "i_u2_embedded_convention__commerce_orders",
+    "i_u2_embedded_convention__team_shared_workspace",
+    "i_u3_embedded_convention__software_repository",
+    "i_u3_embedded_convention__travel_booking",
+    "i_u4_embedded_convention__cicd_cloud_ops",
+    "i_u4_embedded_convention__documents_knowledge",
+    "i_w1_embedded_convention__calendar_meetings",
+    "i_w1_embedded_convention__documents_knowledge",
+    "i_w2_embedded_convention__cicd_cloud_ops",
+    "i_w2_embedded_convention__email_contacts",
+    "i_w3_embedded_convention__finance_expenses",
+    "i_w3_embedded_convention__team_shared_workspace",
+    "i_w4_embedded_convention__email_contacts",
+    "i_w4_embedded_convention__web_research_rag",
+    "i_x1_copied_workflow_block__email_contacts",
+    "i_x1_copied_workflow_block__finance_expenses",
+    "i_x1_embedded_convention__calendar_meetings",
+    "i_x1_embedded_convention__email_contacts",
+    "i_x2_copied_workflow_block__software_repository",
+    "i_x2_copied_workflow_block__team_shared_workspace",
+    "i_x2_embedded_convention__customer_support_crm",
+    "i_x2_embedded_convention__email_contacts",
+    "i_x3_copied_workflow_block__customer_support_crm",
+    "i_x3_copied_workflow_block__finance_expenses",
+    "i_x3_embedded_convention__calendar_meetings",
+    "i_x3_embedded_convention__health_safety",
+    "i_x4_copied_workflow_block__finance_expenses",
+    "i_x4_copied_workflow_block__web_research_rag",
+    "i_x4_embedded_convention__calendar_meetings",
+    "i_x4_embedded_convention__email_contacts"
+  ],
+  "started_at": "2026-11-20T22:51:12.075398Z",
+  "finished_at": "2026-11-20T22:58:42.020447Z",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "error": null
+}

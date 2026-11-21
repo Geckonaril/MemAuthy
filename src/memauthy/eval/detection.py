@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -66,15 +66,24 @@ class BlockRow(BaseModel):
 
 
 def evaluate(
-    samples: Sequence[SyntheticSample], conditions: Iterable[Condition] = DEFAULT_CONDITIONS
+    samples: Sequence[SyntheticSample],
+    conditions: Iterable[Condition] = DEFAULT_CONDITIONS,
+    defense_options: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> tuple[list[BlockRow], dict[str, float]]:
-    """Run every condition on every sample. Returns block rows and seconds per condition."""
+    """Run every condition on every sample. Returns block rows and seconds per condition.
+
+    ``defense_options`` passes extra constructor options per defense code, e.g.
+    ``{"D3": {"client": cached_client}}``.
+    """
+    defense_options = defense_options or {}
     rows: list[BlockRow] = []
     seconds: dict[str, float] = defaultdict(float)
     for cond in conditions:
         for s in samples:
             context = s.context_with_oracle() if cond.level is ProvenanceLevel.P0 else s.context
-            options = {"act_on_uncertain": cond.act_on_uncertain} if cond.defense == "D4" else {}
+            options = dict(defense_options.get(cond.defense, {}))
+            if cond.defense == "D4":
+                options["act_on_uncertain"] = cond.act_on_uncertain
             defense = build_defense(cond.defense, context, **options)
             start = time.perf_counter()
             result = defense.audit(s.memory.snapshot, None, cond.level)

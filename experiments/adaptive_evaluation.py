@@ -17,9 +17,15 @@ from pathlib import Path
 
 from memauthy import bench
 from memauthy.cases import load_case
-from memauthy.config import CostTier, load_config
+from memauthy.config import load_config
 from memauthy.eval.detection import Condition, adaptive_table, evaluate, summarize_adaptive
 from memauthy.eval.manifest import Run
+from memauthy.eval.runner_support import (
+    check_tier,
+    llm_defense_options,
+    record_llm_usage,
+    select_cases,
+)
 from memauthy.synthetic.adaptive import build_adaptive_samples, load_variants
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,16 +38,23 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
-    if config.tier is not CostTier.OFFLINE:
-        print("this runner is tier 0 only", file=sys.stderr)
+    if (err := check_tier(config)) is not None:
+        print(err, file=sys.stderr)
         return 2
     if not bench.dataset_available():
         print("dataset missing: run `memauthy bench download`", file=sys.stderr)
         return 2
     params = config.params
     catalog = json.loads((bench.data_root() / bench.CATALOG).read_text(encoding="utf-8"))
-    case_ids = list(config.case_ids) or [c["case_id"] for c in catalog["cases"]]
+    sampling = params.get("case_sample") or {}
+    case_ids = list(config.case_ids) or select_cases(
+        catalog["cases"],
+        per_template=sampling.get("per_template"),
+        seed=config.seed,
+        channel="indirect_content",
+    )
     conditions = [Condition.parse(x) for x in params["conditions"]]
+    defense_options, llm = llm_defense_options(config, conditions, ROOT / ".cache" / "llm")
 
     with Run.start(
         config,
@@ -56,11 +69,12 @@ def main(argv: list[str] | None = None) -> int:
             samples = build_adaptive_samples(cases, variants, agents=params["agents"])
         run.manifest.case_ids = [c.case_id for c in cases]
         with run.cost.timed("evaluate"):
-            rows, seconds = evaluate(samples, conditions)
+            rows, seconds = evaluate(samples, conditions, defense_options)
         for label, secs in seconds.items():
             run.cost.add(f"audit:{label}", seconds=secs)
 
         summary = {
+            "llm_usage": record_llm_usage(run, llm),
             "variants": params["variants"],
             "n_cases": len(cases),
             "n_variants": len(variants),

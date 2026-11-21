@@ -1,0 +1,19 @@
+# D3 (local LLM sanitizer) on the full control set v0.1. Tier 1: local model, no API cost.
+# ADR-0014. Responses are cached under .cache/llm/ (resumable).
+name: d3-control-v01
+description: Control set v0.1 (120 items x 2 agents) with D3 next to D2 and D4.
+tier: 1
+seed: 20261120
+defenses: [D0, D2, D3, D4]
+provenance_levels: [P1, P2]
+policies: [block]
+models:
+  d3:
+    name: llama3.1:8b
+    provider: ollama
+    temperature: 0.0
+    max_tokens: 160
+params:
+  control_set: data/control/v0.1/control_set.jsonl
+  agents: [claude-code, openclaw]
+  conditions: [D0, D2, D3, D4@P1, D4@P2]

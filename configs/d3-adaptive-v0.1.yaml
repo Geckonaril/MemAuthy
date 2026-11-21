@@ -1,0 +1,22 @@
+# D3 on adaptive variants v0.1, stratified subset: 2 IPI cases per template (32 cases) x 2
+# agents x 24 variants. Tier 1 (local model). ADR-0014.
+name: d3-adaptive-v01
+description: Stratified subset of the adaptive evaluation with D3 next to D2 and D4.
+tier: 1
+seed: 20261120
+defenses: [D0, D2, D3, D4]
+provenance_levels: [P1, P2]
+policies: [block]
+case_ids: []
+models:
+  d3:
+    name: llama3.1:8b
+    provider: ollama
+    temperature: 0.0
+    max_tokens: 160
+params:
+  case_sample:
+    per_template: 2
+  variants: data/adaptive/v0.1/variants.jsonl
+  agents: [claude-code, openclaw]
+  conditions: [D0, D2, D3, D4@P1, D4@P2]

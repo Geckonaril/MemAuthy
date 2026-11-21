@@ -1,0 +1,114 @@
+{
+  "schema_version": "0.1",
+  "run_id": "20261120T230304Z-d3-adaptive-v01-90a2b0eb",
+  "status": "completed",
+  "memauthy_version": "0.1.0.dev0",
+  "memauthy_git": {
+    "commit": "c2ea5eaeda7d85c945a981d7029a99a88b50ed64",
+    "dirty": false
+  },
+  "benchmark_commit": "9affbe5af5c2624ac6d4c03730a39ec11d6cc802",
+  "dataset_revision": "2b4c2b736fdbabf7e56182870d71095ac38afdb0",
+  "config_hash": "90a2b0eb4f7a0684add04aad63331e686fe7561ae61877afe9bd7ef4fc8cb98a",
+  "config": {
+    "name": "d3-adaptive-v01",
+    "description": "Stratified subset of the adaptive evaluation with D3 next to D2 and D4.",
+    "tier": 1,
+    "seed": 20261120,
+    "defenses": [
+      "D0",
+      "D2",
+      "D3",
+      "D4"
+    ],
+    "provenance_levels": [
+      "P1",
+      "P2"
+    ],
+    "policies": [
+      "block"
+    ],
+    "case_ids": [],
+    "models": {
+      "d3": {
+        "name": "llama3.1:8b",
+        "version": null,
+        "provider": "ollama",
+        "temperature": 0.0,
+        "top_p": null,
+        "max_tokens": 160,
+        "endpoint_env": null,
+        "key_env": null
+      }
+    },
+    "params": {
+      "case_sample": {
+        "per_template": 2
+      },
+      "variants": "data/adaptive/v0.1/variants.jsonl",
+      "agents": [
+        "claude-code",
+        "openclaw"
+      ],
+      "conditions": [
+        "D0",
+        "D2",
+        "D3",
+        "D4@P1",
+        "D4@P2"
+      ]
+    }
+  },
+  "models": {
+    "d3": {
+      "name": "llama3.1:8b",
+      "version": null,
+      "provider": "ollama",
+      "temperature": 0.0,
+      "top_p": null,
+      "max_tokens": 160,
+      "endpoint_env": null,
+      "key_env": null
+    }
+  },
+  "seed": 20261120,
+  "case_ids": [
+    "i_u1_embedded_convention__health_safety",
+    "i_u1_embedded_convention__team_shared_workspace",
+    "i_u2_embedded_convention__finance_expenses",
+    "i_u2_embedded_convention__software_repository",
+    "i_u3_embedded_convention__customer_support_crm",
+    "i_u3_embedded_convention__documents_knowledge",
+    "i_u4_embedded_convention__commerce_orders",
+    "i_u4_embedded_convention__web_research_rag",
+    "i_w1_embedded_convention__cicd_cloud_ops",
+    "i_w1_embedded_convention__finance_expenses",
+    "i_w2_embedded_convention__commerce_orders",
+    "i_w2_embedded_convention__finance_expenses",
+    "i_w3_embedded_convention__commerce_orders",
+    "i_w3_embedded_convention__documents_knowledge",
+    "i_w4_embedded_convention__customer_support_crm",
+    "i_w4_embedded_convention__health_safety",
+    "i_x1_copied_workflow_block__email_contacts",
+    "i_x1_copied_workflow_block__web_research_rag",
+    "i_x1_embedded_convention__commerce_orders",
+    "i_x1_embedded_convention__team_shared_workspace",
+    "i_x2_copied_workflow_block__software_repository",
+    "i_x2_copied_workflow_block__travel_booking",
+    "i_x2_embedded_convention__cicd_cloud_ops",
+    "i_x2_embedded_convention__documents_knowledge",
+    "i_x3_copied_workflow_block__calendar_meetings",
+    "i_x3_copied_workflow_block__documents_knowledge",
+    "i_x3_embedded_convention__cicd_cloud_ops",
+    "i_x3_embedded_convention__email_contacts",
+    "i_x4_copied_workflow_block__finance_expenses",
+    "i_x4_copied_workflow_block__team_shared_workspace",
+    "i_x4_embedded_convention__email_contacts",
+    "i_x4_embedded_convention__web_research_rag"
+  ],
+  "started_at": "2026-11-20T23:03:04.554231Z",
+  "finished_at": "2026-11-20T23:36:20.881533Z",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "error": null
+}

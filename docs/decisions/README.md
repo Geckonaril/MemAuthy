@@ -17,3 +17,4 @@ Short records of significant design decisions. Template: [0000-template.md](0000
 | [0011](0011-synthetic-offline-detection.md) | Synthetic snapshots for offline detection | Accepted |
 | [0012](0012-p2-taint-and-provenance-first.md) | P2 transcript taint and the provenance-first rule | Accepted |
 | [0013](0013-adaptive-variants.md) | Adaptive attack variants v0.1 | Accepted |
+| [0014](0014-d3-local-llm-sanitizer.md) | D3 local LLM memory sanitizer | Accepted |
