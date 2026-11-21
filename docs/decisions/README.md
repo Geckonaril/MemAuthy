@@ -19,3 +19,4 @@ Short records of significant design decisions. Template: [0000-template.md](0000
 | [0013](0013-adaptive-variants.md) | Adaptive attack variants v0.1 | Accepted |
 | [0014](0014-d3-local-llm-sanitizer.md) | D3 local LLM memory sanitizer | Accepted |
 | [0015](0015-defense-arms-in-benchmark-runs.md) | Defense arms between exposure and trigger | Accepted |
+| [0016](0016-local-rehearsal.md) | Zero-cost local rehearsal of benchmark campaigns | Accepted |

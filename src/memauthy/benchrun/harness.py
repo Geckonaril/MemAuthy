@@ -13,6 +13,7 @@ orchestration it delegates to is unit-tested in ``tests/test_benchrun.py``.
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,8 @@ from memauthy.cases import load_case
 def make_chain_runner(
     arm_labels: Sequence[str],
     defense_options: Mapping[str, Mapping[str, Any]] | None = None,
+    *,
+    force_trigger: bool = False,
 ) -> Any:
     arms = parse_arms(arm_labels)
 
@@ -75,11 +78,23 @@ def make_chain_runner(
                 defend=defend,
                 valid_label=valid_label,
                 terminal_errors=(TerminalStage,),
+                force_trigger=force_trigger,
+                arms_dir=arms_dir(Path(HERE), job["chain_id"]),
             )
         except LineageError as exc:
             raise NeedsAttention(str(exc)) from None
 
     return run_chain
+
+
+def arms_dir(run_dir: Path, chain_id: str) -> Path:
+    """Short arm location: ``<run_dir>/arms/<10 hex of chain_id>``.
+
+    The benchmark's own chain paths are already long; nesting the arms under them pushed the
+    trigger's native transcript beyond what Docker Desktop's Windows bind mounts can write
+    (``Input/output error``, found in the rehearsal of issue #46).
+    """
+    return run_dir / "arms" / hashlib.sha256(chain_id.encode()).hexdigest()[:10]
 
 
 def _openclaw_trigger(
@@ -108,8 +123,12 @@ def _openclaw_trigger(
 def install(
     arm_labels: Sequence[str],
     defense_options: Mapping[str, Mapping[str, Any]] | None = None,
+    *,
+    force_trigger: bool = False,
 ) -> None:
     """Replace ``run_standard`` in the benchmark worker (call before ``runtime.control.worker``)."""
     from runtime import control
 
-    control.run_standard = make_chain_runner(arm_labels, defense_options)
+    control.run_standard = make_chain_runner(
+        arm_labels, defense_options, force_trigger=force_trigger
+    )

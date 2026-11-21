@@ -1,0 +1,26 @@
+# Zero-cost end-to-end rehearsal (issue #46, ADR-0016). Tier 1: local Ollama only.
+# "gemini-2.5-flash" and "gpt-5" are LOCAL Ollama aliases of a small open model
+# (configs/rehearsal-ollama.Modelfile); the benchmark accepts only these names.
+# Behavioural outcomes of a rehearsal are never analysed: it checks plumbing and measures
+# calls/tokens per stage for the budget estimate (issue #47).
+name: rehearsal-claude-v01
+description: Local rehearsal, claude_code agent, 3 IPI cases x 1 replicate x 3 arms.
+tier: 1
+seed: 20261121
+params:
+  rehearsal: true
+  arms: [D0, D2, D4@P2]
+  replicates: [1]
+  case_sample:
+    channel: indirect_content
+    n_cases: 3
+  benchmark:
+    agent: claude_code
+    model: gemini-2.5-flash
+    judge_model: gpt-5
+    agent_endpoint: http://host.docker.internal:11434/v1
+    judge_endpoint: http://localhost:11434/v1
+    agent_key_env: MHB_AGENT_API_KEY
+    judge_key_env: MHB_JUDGE_API_KEY
+    agent_image: memharmbench/claude-code:2.1.228
+    gateway_image: memharmbench/gateway:1.101.0
