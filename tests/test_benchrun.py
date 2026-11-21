@@ -302,3 +302,25 @@ def test_force_trigger_runs_arms_without_positive_pmir(tmp_path: Path) -> None:
     assert result["exposure"]["trigger_status"] == "forced"
     assert {v["status"] for v in result["arms"].values()} == {"run"}
     assert result["state"] == "complete_with_unresolved"  # PMIR itself stays unresolved
+
+
+def test_arms_can_live_in_a_short_directory(tmp_path: Path) -> None:
+    from memauthy.benchrun.harness import arms_dir
+
+    short = arms_dir(tmp_path, "claude_code_gemini-2.5-flash_r1_some_long_case_id")
+    assert short.parent == tmp_path / "arms" and len(short.name) == 10
+    assert short == arms_dir(tmp_path, "claude_code_gemini-2.5-flash_r1_some_long_case_id")
+    bench = FakeBench()
+    result = run_defended_chain(
+        job={"chain_id": "c1", "case_id": "case-1"},
+        root=tmp_path / "chain",
+        arms=ARMS,
+        exposure=bench.exposure,
+        trigger=bench.trigger,
+        judge=bench.judge,
+        defend=lambda arm, exps: defend_exposure(arm, "claude_code", exps, case=CASE),
+        arms_dir=short,
+    )
+    assert result["arms"]["D0:block"]["root"] == str(short / "D0-block")
+    assert (short / "D2-block" / "defense.json").is_file()
+    assert not (tmp_path / "chain" / "arms").exists()

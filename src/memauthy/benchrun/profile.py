@@ -105,10 +105,13 @@ def chain_profile(chain_dir: Path) -> dict[str, Any]:
             f"exposure{attempt}",
             chain_dir / "judging" / f"exposure{attempt}",
         )
-    for arm_dir in sorted((chain_dir / "arms").glob("*")):
+    result = _read(chain_dir / "chain_result.json") or {}
+    arm_dirs = [Path(a["root"]) for a in (result.get("arms") or {}).values() if a.get("root")]
+    if not arm_dirs:  # older layout: arms nested in the chain directory
+        arm_dirs = sorted((chain_dir / "arms").glob("*"))
+    for arm_dir in arm_dirs:
         # each arm's trigger is a fresh session: transcript IDs never overlap the exposure
         stage(f"arm:{arm_dir.name}", arm_dir, "trigger", arm_dir / "judging" / "trigger")
-    result = _read(chain_dir / "chain_result.json") or {}
     return {
         "chain_id": chain_dir.name,
         "state": result.get("state"),

@@ -64,6 +64,7 @@ def run_defended_chain(
     valid_label: LabelFn = default_label,
     terminal_errors: tuple[type[BaseException], ...] = (),
     force_trigger: bool = False,
+    arms_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Run or resume one matched chain and write ``<root>/chain_result.json``.
 
@@ -72,11 +73,14 @@ def run_defended_chain(
       (nothing was stored, so every arm counts as non-adoption in full-cohort analysis).
     * PMIR 1 → for each arm: defend, run a fresh trigger in ``<root>/arms/<slug>``, judge it.
     * A technical failure in one arm is recorded for that arm only; failures are never dropped.
+    * ``arms_dir``: where the arm directories go (default ``<root>/arms``). The benchmark
+      harness uses a short path, because Docker Desktop bind mounts fail on long Windows paths.
     * ``force_trigger`` (rehearsals only): also run the arms when PMIR is not 1 but the
       exposure changed memory. ``trigger_status`` is then ``forced``. It exercises the trigger
       path when a weak local judge cannot resolve PMIR; such outcomes are never analysed.
     """
     root = Path(root)
+    arms_dir = Path(arms_dir) if arms_dir is not None else root / "arms"
     saved = _read_json(root / RESULT_FILE)
     if saved is not None:
         return saved
@@ -129,8 +133,8 @@ def run_defended_chain(
             result["exposure"]["trigger_status"] = "forced" if forced else "run"
             for arm in arms:
                 result["arms"][arm.label] = _run_arm(
-                    arm, root, exposures, selected, trigger, judge, defend, valid_label,
-                    terminal_errors,
+                    arm, arms_dir / arm.slug, exposures, selected, trigger, judge, defend,
+                    valid_label, terminal_errors,
                 )  # fmt: skip
         elif pmir == 0:  # nothing stored (also when forcing: memory unchanged)
             result["exposure"]["trigger_status"] = "skipped"
@@ -151,7 +155,7 @@ def run_defended_chain(
 
 def _run_arm(
     arm: Arm,
-    root: Path,
+    arm_root: Path,
     exposures: Sequence[Evidence],
     selected: Evidence,
     trigger: TriggerFn,
@@ -160,8 +164,12 @@ def _run_arm(
     valid_label: LabelFn,
     terminal_errors: tuple[type[BaseException], ...],
 ) -> dict[str, Any]:
-    arm_root = root / "arms" / arm.slug
-    out: dict[str, Any] = {"status": "pending", "technical_failure": False, "adoption": None}
+    out: dict[str, Any] = {
+        "status": "pending",
+        "technical_failure": False,
+        "adoption": None,
+        "root": str(arm_root),
+    }
     try:
         defended = defend(arm, exposures)
     except DefenseInputError as exc:

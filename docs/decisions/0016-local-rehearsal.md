@@ -58,3 +58,18 @@ checks that the upstream answers with exactly that model name.
   - The budget estimate therefore uses a safety margin (issue #47).
 - D3 arms are not wired into campaigns yet (no LLM client option in the launcher).
 - The launcher runs on Windows only, like the benchmark's background control.
+
+## Findings from the rehearsal
+- **v0.1 (Claude Code).**
+  - Exposure, memory capture and judging ran without technical failure.
+  - The local 8B "judge" produced invalid evidence references, so PMIR stayed unresolved and
+    no trigger ran.
+  - The rehearsal-only option `force_trigger` (refused outside rehearsals) runs the arms when
+    the exposure changed memory. The chain is then marked `trigger_status: forced`.
+- **v0.2 (Claude Code), first attempt.**
+  - The trigger's native transcript could not be written: Docker Desktop's Windows bind mount
+    returned `Input/output error` for the arm directories nested inside the benchmark's
+    already long chain path. This was reproduced with a probe container, and a shorter
+    directory worked.
+  - Arms now live in `<run_dir>/arms/<10 hex of chain_id>/<arm>/`. `chain_result.json` records
+    each arm's `root`.
