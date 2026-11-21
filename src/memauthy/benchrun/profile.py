@@ -7,6 +7,10 @@ Reads ``<campaign>/outputs/<chain>/``, written by the benchmark and by ``memauth
   message already seen in an earlier stage of the same chain is not counted again (exposure
   attempt 2 continues the attempt-1 session). Upstream call counts come from
   ``*_upstream.json``.
+* **Agent (OpenClaw).** ``steps/<stage>/evidence.json``. The relay does not pass token usage
+  through (OpenClaw records zeros), so the profile uses OpenClaw's own pre-prompt estimate
+  (``native_model_metadata.contextBudgetStatus.estimatedPromptTokens``) and counts upstream
+  calls from ``upstream_audit``.
 * **Judge.** ``usage`` of every ``judge_cache/*/response_*.json``.
 
 Only counts are read; no transcript text is copied into the profile.
@@ -78,23 +82,37 @@ def judge_usage(judging_dir: Path) -> Counter:
     return out
 
 
+def openclaw_usage(evidence: Mapping[str, Any]) -> Counter:
+    out = _new()
+    meta = evidence.get("native_model_metadata") or {}
+    budget = meta.get("contextBudgetStatus") or {}
+    out["estimated_prompt_tokens"] = int(budget.get("estimatedPromptTokens") or 0)
+    out["max_prompt_tokens"] = out["estimated_prompt_tokens"]
+    return out
+
+
 def _read(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
 
 
 def chain_profile(chain_dir: Path) -> dict[str, Any]:
-    """Per-stage counts for one Claude Code chain (``exposure1``, ``exposure2``, ``arm:<slug>``)."""
+    """Per-stage counts for one chain (``exposure1``, ``exposure2``, ``arm:<slug>``)."""
     stages: dict[str, dict[str, Any]] = {}
     seen: set[str] = set()
 
     def stage(name: str, base: Path, prefix: str, judging: Path) -> None:
         evidence = _read(base / f"{prefix}_evidence.json")
-        if evidence is None:
-            return
-        upstream = _read(base / f"{prefix}_upstream.json") or {}
+        if evidence is not None:  # Claude Code layout
+            upstream = _read(base / f"{prefix}_upstream.json") or {}
+            agent, calls = agent_usage(evidence, seen), len(upstream.get("rows", []))
+        else:  # OpenClaw layout
+            evidence = _read(base / "steps" / prefix / "evidence.json")
+            if evidence is None:
+                return
+            agent, calls = openclaw_usage(evidence), len(evidence.get("upstream_audit") or [])
         stages[name] = {
-            "agent": dict(agent_usage(evidence, seen)),
-            "upstream_calls": len(upstream.get("rows", [])),
+            "agent": dict(agent),
+            "upstream_calls": calls,
             "judge": dict(judge_usage(judging)),
         }
 

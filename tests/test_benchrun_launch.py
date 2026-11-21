@@ -191,3 +191,17 @@ def test_profile_counts_each_message_once(tmp_path: Path) -> None:
         and totals["exposure"]["judge_prompt_tokens"] == 1000
     )
     assert totals["trigger"]["agent_prompt_tokens"] == 50 and totals["trigger"]["sessions"] == 1
+
+
+def test_profile_reads_openclaw_layout(tmp_path: Path) -> None:
+    from memauthy.benchrun.profile import campaign_profile
+
+    ev = {
+        "upstream_audit": [{}, {}, {}],
+        "native_model_metadata": {"contextBudgetStatus": {"estimatedPromptTokens": 7886}},
+    }
+    path = tmp_path / "outputs" / "c1" / "steps" / "exposure1" / "evidence.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(ev), encoding="utf-8")
+    totals = campaign_profile(tmp_path)["totals"]["exposure"]
+    assert totals["upstream_calls"] == 3 and totals["agent_estimated_prompt_tokens"] == 7886

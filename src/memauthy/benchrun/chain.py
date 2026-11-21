@@ -75,9 +75,10 @@ def run_defended_chain(
     * A technical failure in one arm is recorded for that arm only; failures are never dropped.
     * ``arms_dir``: where the arm directories go (default ``<root>/arms``). The benchmark
       harness uses a short path, because Docker Desktop bind mounts fail on long Windows paths.
-    * ``force_trigger`` (rehearsals only): also run the arms when PMIR is not 1 but the
-      exposure changed memory. ``trigger_status`` is then ``forced``. It exercises the trigger
-      path when a weak local judge cannot resolve PMIR; such outcomes are never analysed.
+    * ``force_trigger`` (rehearsals only): also run the arms when PMIR is not 1, as long as
+      there is memory to restore (OpenClaw always has its bootstrap files). ``trigger_status``
+      is then ``forced``. It exercises the trigger path when a weak local agent stores nothing
+      or a weak local judge cannot resolve PMIR; such outcomes are never analysed.
     """
     root = Path(root)
     arms_dir = Path(arms_dir) if arms_dir is not None else root / "arms"
@@ -121,12 +122,7 @@ def run_defended_chain(
             if pmir is None or pmir == 1:
                 break
         assert selected is not None
-        forced = (
-            force_trigger
-            and pmir != 1
-            and bool(selected.get("memory_after"))
-            and selected.get("memory_after") != exposures[0].get("memory_before")
-        )
+        forced = force_trigger and pmir != 1 and bool(selected.get("memory_after"))
         if pmir == 1 or forced:
             if not selected.get("memory_after"):
                 raise LineageError("positive PMIR contradicts empty memory")

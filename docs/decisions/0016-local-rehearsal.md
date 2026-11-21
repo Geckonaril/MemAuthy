@@ -98,3 +98,12 @@ checks that the upstream answers with exactly that model name.
     tokens.
   - Call counts per session are not representative of the target model. The budget
     estimate (issue #47) must assume them.
+- **OpenClaw v0.2 (commit `acd8f3c`).**
+  - The three exposures completed without technical failure.
+  - The 8B stand-in answered without writing memory, so `force_trigger` (which then
+    required changed memory) did not fire, and the OpenClaw trigger binding stayed untested.
+  - `force_trigger` now fires whenever there is memory to restore; OpenClaw always has its
+    bootstrap files.
+  - OpenClaw's relay records zero token usage. The profile therefore uses OpenClaw's
+    pre-prompt estimate (about 7.9k tokens at session start) and the upstream call count:
+    about 5 per exposure.
