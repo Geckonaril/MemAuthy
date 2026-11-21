@@ -118,3 +118,18 @@ checks that the upstream answers with exactly that model name.
        session can make dozens of full-prompt calls, so the budget must assume a worst case
        per session, not a typical one.
     2. A timeout-aborted capture halts the whole campaign until it is handled by hand.
+- **OpenClaw v0.3, second attempt (commit `39ba581`).**
+  - Three chains with forced triggers ran nine arm sessions without technical failure.
+  - D2 removed 7 blocks of OpenClaw's owner bootstrap files in every chain. The D2 trigger
+    started from that edited memory, and the lineage checks passed, which validates the
+    OpenClaw trigger binding.
+  - D4@P2 kept the bootstrap, which is baseline memory.
+  - Upstream calls averaged about 4 per exposure and about 3.4 per trigger. OpenClaw's
+    pre-prompt estimate was about 7.9k tokens, and judge requests were about 16k prompt
+    tokens each.
+
+## Status after the rehearsal
+Both agents ran the full chain, with exposure, defense arms, triggers and judge, at zero
+cost. The rehearsal fixed two harness defects and found two risks for the paid run:
+- **Fixed:** the arm path length; the stale gateway container.
+- **Risks:** the worst-case number of calls per session; a timeout halting the campaign.

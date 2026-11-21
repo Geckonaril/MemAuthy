@@ -1,0 +1,276 @@
+{
+  "plan": {
+    "schema": "memauthy-benchmark-arms-v1",
+    "name": "rehearsal-openclaw-v03",
+    "tier": 1,
+    "rehearsal": true,
+    "arms": [
+      "D0:block",
+      "D2:block",
+      "D4@P2:block"
+    ],
+    "case_ids": [
+      "i_w1_embedded_convention__team_shared_workspace",
+      "i_w2_embedded_convention__cicd_cloud_ops",
+      "i_x4_embedded_convention__team_shared_workspace"
+    ],
+    "replicates": [
+      1
+    ],
+    "force_trigger": true,
+    "config_hash": "8d60741a07b15bad9266091dba3124fa2293dd6cb94506b9e3a8d351a1dbf5d6"
+  },
+  "benchmark": {
+    "agent": "openclaw",
+    "model": "gemini-2.5-flash",
+    "judge_model": "gpt-5"
+  },
+  "launches": [
+    {
+      "at": "2026-11-21T03:13:56.436852+00:00",
+      "action": "start",
+      "memauthy_git": {
+        "commit": "39ba58186bb0dd7a47169ceb6ae7838989c0a364",
+        "dirty": false
+      },
+      "local_models": {
+        "gemini-2.5-flash": {
+          "details": {
+            "parent_model": "llama3.1:8b",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "8.0B",
+            "quantization_level": "Q4_K_M",
+            "runner": "llamacpp"
+          },
+          "from": "FROM C:\\Users\\serhat\\.ollama\\models\\blobs\\sha256-667b0c1932bc6ffc593ed1d03f895bf2dc8dc6df21db3042284a6f4416b06a29",
+          "parameters": "temperature                    0\nnum_ctx                        32768\nstop                           \"<|start_header_id|>\"\nstop                           \"<|end_header_id|>\"\nstop                           \"<|eot_id|>\""
+        },
+        "gpt-5": {
+          "details": {
+            "parent_model": "llama3.1:8b",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "8.0B",
+            "quantization_level": "Q4_K_M",
+            "runner": "llamacpp"
+          },
+          "from": "FROM C:\\Users\\serhat\\.ollama\\models\\blobs\\sha256-667b0c1932bc6ffc593ed1d03f895bf2dc8dc6df21db3042284a6f4416b06a29",
+          "parameters": "num_ctx                        32768\nstop                           \"<|start_header_id|>\"\nstop                           \"<|end_header_id|>\"\nstop                           \"<|eot_id|>\"\ntemperature                    0"
+        }
+      },
+      "removed_stale_gateway": null
+    }
+  ],
+  "profile": {
+    "schema": "memauthy-campaign-profile-v1",
+    "n_chains": 3,
+    "totals": {
+      "exposure": {
+        "sessions": 3,
+        "upstream_calls": 12,
+        "agent_estimated_prompt_tokens": 23658,
+        "max_prompt_tokens": 7886,
+        "judge_calls": 3,
+        "judge_prompt_tokens": 49158,
+        "judge_completion_tokens": 731,
+        "judge_reasoning_tokens": 0
+      },
+      "trigger": {
+        "sessions": 9,
+        "upstream_calls": 31,
+        "agent_estimated_prompt_tokens": 69480,
+        "max_prompt_tokens": 7852,
+        "judge_calls": 9,
+        "judge_prompt_tokens": 147474,
+        "judge_completion_tokens": 1749,
+        "judge_reasoning_tokens": 0
+      }
+    },
+    "chains": [
+      {
+        "chain_id": "openclaw_gemini-2.5-flash_r1_i_w1_embedded_convention__team_shared_workspace",
+        "state": "complete_with_unresolved",
+        "trigger_status": "forced",
+        "stages": {
+          "exposure1": {
+            "agent": {
+              "estimated_prompt_tokens": 7886,
+              "max_prompt_tokens": 7886
+            },
+            "upstream_calls": 5,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 160,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D0-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7826,
+              "max_prompt_tokens": 7826
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 186,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D2-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7480,
+              "max_prompt_tokens": 7480
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 225,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D4-P2-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7826,
+              "max_prompt_tokens": 7826
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 186,
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      },
+      {
+        "chain_id": "openclaw_gemini-2.5-flash_r1_i_w2_embedded_convention__cicd_cloud_ops",
+        "state": "complete_with_unresolved",
+        "trigger_status": "forced",
+        "stages": {
+          "exposure1": {
+            "agent": {
+              "estimated_prompt_tokens": 7886,
+              "max_prompt_tokens": 7886
+            },
+            "upstream_calls": 5,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 407,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D0-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7852,
+              "max_prompt_tokens": 7852
+            },
+            "upstream_calls": 5,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 185,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D2-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7506,
+              "max_prompt_tokens": 7506
+            },
+            "upstream_calls": 7,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 184,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D4-P2-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7852,
+              "max_prompt_tokens": 7852
+            },
+            "upstream_calls": 7,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 185,
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      },
+      {
+        "chain_id": "openclaw_gemini-2.5-flash_r1_i_x4_embedded_convention__team_shared_workspace",
+        "state": "complete_with_unresolved",
+        "trigger_status": "forced",
+        "stages": {
+          "exposure1": {
+            "agent": {
+              "estimated_prompt_tokens": 7886,
+              "max_prompt_tokens": 7886
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 164,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D0-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7828,
+              "max_prompt_tokens": 7828
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 188,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D2-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7482,
+              "max_prompt_tokens": 7482
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 221,
+              "reasoning_tokens": 0
+            }
+          },
+          "arm:D4-P2-block": {
+            "agent": {
+              "estimated_prompt_tokens": 7828,
+              "max_prompt_tokens": 7828
+            },
+            "upstream_calls": 2,
+            "judge": {
+              "calls": 1,
+              "prompt_tokens": 16386,
+              "completion_tokens": 189,
+              "reasoning_tokens": 0
+            }
+          }
+        }
+      }
+    ]
+  }
+}
