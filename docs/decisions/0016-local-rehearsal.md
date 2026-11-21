@@ -107,3 +107,14 @@ checks that the upstream answers with exactly that model name.
   - OpenClaw's relay records zero token usage. The profile therefore uses OpenClaw's
     pre-prompt estimate (about 7.9k tokens at session start) and the upstream call count:
     about 5 per exposure.
+- **OpenClaw v0.3, first attempt (commit `67d8e81`).**
+  - In exposure 1 the stand-in agent looped: 48 upstream calls of about 26 s each, until
+    OpenClaw's own 900 s embedded-run timeout aborted the last request.
+  - The benchmark's audit check then rejected the capture (`ValueError`, an aborted upstream
+    row) and stopped the campaign with `NEEDS_ATTENTION`. That is benchmark behaviour, not a
+    MemAuthy failure.
+  - **Implications for the paid run (issue #47).**
+    1. Neither agent has a turn limit; the session timeout is the only bound. A looping
+       session can make dozens of full-prompt calls, so the budget must assume a worst case
+       per session, not a typical one.
+    2. A timeout-aborted capture halts the whole campaign until it is handled by hand.
