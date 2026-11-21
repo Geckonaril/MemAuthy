@@ -132,6 +132,33 @@ def ollama_models(plan: dict[str, Any]) -> dict[str, Any]:
     return info
 
 
+def remove_stale_gateway(control: Any) -> str | None:
+    """Remove this campaign's gateway container if its private token file no longer exists.
+
+    The gateway name depends only on the benchmark config, so a container left behind by a
+    deleted run directory is reused by a fresh campaign with the same config. It still holds
+    the old master key and rejects the new client (``400 No connected db``).
+    """
+    if control.CONFIG["agent"] != "claude_code":
+        return None
+    from runtime.settings import owner
+
+    name = owner(control.CONFIG) + "-gateway"
+    if (Path(control.CONFIG["run_dir"]) / "gateway" / "tokens.json").exists():
+        return None
+    label = '{{index .Config.Labels "memharmbench.owner"}}'
+    found = subprocess.run(
+        ["docker", "inspect", "--type", "container", name, "--format", label],
+        capture_output=True,
+        text=True,
+    )
+    if found.returncode or found.stdout.strip() != name:
+        return None  # no container, or not owned by this benchmark config
+    if subprocess.run(["docker", "rm", "-f", name], capture_output=True).returncode:
+        raise RuntimeError(f"could not remove stale gateway container {name}")
+    return name
+
+
 def start(control: Any, config_path: Path, plan: dict[str, Any], run_dir: Path, action: str):
     """``runtime.control.start`` with the worker command pointing at this script."""
     if os.name != "nt":
@@ -141,6 +168,7 @@ def start(control: Any, config_path: Path, plan: dict[str, Any], run_dir: Path, 
         "action": action,
         "memauthy_git": git_state(ROOT).model_dump(mode="json"),
         "local_models": ollama_models(plan) if plan["rehearsal"] else None,
+        "removed_stale_gateway": remove_stale_gateway(control),
     }
     with (run_dir / "launches.jsonl").open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(launch) + "\n")

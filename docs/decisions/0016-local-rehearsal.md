@@ -73,3 +73,10 @@ checks that the upstream answers with exactly that model name.
     directory worked.
   - Arms now live in `<run_dir>/arms/<10 hex of chain_id>/<arm>/`. `chain_result.json` records
     each arm's `root`.
+- **v0.2, second attempt.**
+  - After the run directory was deleted, the benchmark reused the gateway container of the
+    same config. That container held the old master key and rejected the new client with
+    `400 No connected db`, so exposure 1 stopped as an integrity failure.
+  - The launcher now removes this campaign's own gateway container (checked by its owner
+    label) when the campaign's private token file is missing. The removal is recorded in
+    `launches.jsonl`.
