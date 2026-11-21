@@ -7,6 +7,7 @@ Usage (PowerShell, from the repo root)::
     uv run python experiments/benchmark_arms.py --config $cfg start
     uv run python experiments/benchmark_arms.py --config $cfg status --watch
     uv run python experiments/benchmark_arms.py --config $cfg pause
+    uv run python experiments/benchmark_arms.py --config $cfg profile
 
 Same control semantics as the benchmark's ``scripts/experiment.py`` (background worker,
 checkpoints, ``pause``/``resume``/``retry``), with three differences:
@@ -35,7 +36,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 BENCH = ROOT / "third_party" / "MemHarmBench"
-ACTIONS = ("check", "start", "status", "pause", "resume", "retry", "_worker")
+ACTIONS = ("check", "start", "status", "pause", "resume", "retry", "profile", "_worker")
 
 from memauthy import bench  # noqa: E402
 from memauthy.benchrun import harness  # noqa: E402
@@ -46,6 +47,7 @@ from memauthy.benchrun.launch import (  # noqa: E402
     relaxed_loader,
     run_plan,
 )
+from memauthy.benchrun.profile import campaign_profile  # noqa: E402
 from memauthy.config import config_hash, load_config  # noqa: E402
 from memauthy.eval.manifest import git_state  # noqa: E402
 
@@ -100,7 +102,7 @@ def bootstrap(plan: dict[str, Any], bench_config: Path) -> Any:
     protocols.jobs = subset
     control.jobs = subset
     control.check = check
-    harness.install(plan["arms"])
+    harness.install(plan["arms"], force_trigger=plan.get("force_trigger", False))
     return control
 
 
@@ -201,6 +203,28 @@ def start(control: Any, config_path: Path, plan: dict[str, Any], run_dir: Path, 
         return {"started": True, "pid": proc.pid, "logs": str(logdir), "run_dir": str(run_dir)}
 
 
+def write_profile(plan: dict[str, Any], run_dir: Path) -> int:
+    """Counts only (no transcript text) to ``results/<name>/summary.json`` (committed)."""
+    launches = [
+        json.loads(x)
+        for x in (run_dir / "launches.jsonl").read_text(encoding="utf-8").splitlines()
+        if x.strip()
+    ]
+    profile = campaign_profile(run_dir / "campaign")
+    summary = {
+        "plan": {k: v for k, v in plan.items() if k != "benchmark_config"},
+        "benchmark": {k: plan["benchmark_config"][k] for k in ("agent", "model", "judge_model")},
+        "launches": launches,
+        "profile": profile,
+    }
+    out = ROOT / "results" / plan["name"] / "summary.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(profile["totals"], indent=2))
+    print(f"written: {out}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--config", type=Path, required=True)
@@ -210,6 +234,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         plan, run_dir, bench_config = prepare(args.config)
+        if args.action == "profile":
+            return write_profile(plan, run_dir)
         control = bootstrap(plan, bench_config)
         if args.action == "_worker":
             return control.worker()

@@ -118,7 +118,10 @@ def run_plan(
     replicates = [int(r) for r in config.params.get("replicates", [1])]
     if not replicates or any(r not in (1, 2, 3) for r in replicates):
         raise LaunchError("replicates must be a non-empty subset of [1, 2, 3]")
-    return {
+    force = bool(config.params.get("force_trigger", False))
+    if force and not config.params.get("rehearsal"):
+        raise LaunchError("force_trigger is a rehearsal-only option")
+    plan = {
         "schema": "memauthy-benchmark-arms-v1",
         "name": config.name,
         "tier": int(config.tier),
@@ -128,6 +131,9 @@ def run_plan(
         "replicates": replicates,
         "benchmark_config": benchmark_config(config, run_dir),
     }
+    if force:  # only recorded when set, so earlier frozen plans stay valid
+        plan["force_trigger"] = True
+    return plan
 
 
 def freeze_json(path: Path, value: Mapping[str, Any], what: str) -> None:

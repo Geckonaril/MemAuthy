@@ -25,6 +25,8 @@ from memauthy.cases import load_case
 def make_chain_runner(
     arm_labels: Sequence[str],
     defense_options: Mapping[str, Mapping[str, Any]] | None = None,
+    *,
+    force_trigger: bool = False,
 ) -> Any:
     arms = parse_arms(arm_labels)
 
@@ -75,6 +77,7 @@ def make_chain_runner(
                 defend=defend,
                 valid_label=valid_label,
                 terminal_errors=(TerminalStage,),
+                force_trigger=force_trigger,
             )
         except LineageError as exc:
             raise NeedsAttention(str(exc)) from None
@@ -108,8 +111,12 @@ def _openclaw_trigger(
 def install(
     arm_labels: Sequence[str],
     defense_options: Mapping[str, Mapping[str, Any]] | None = None,
+    *,
+    force_trigger: bool = False,
 ) -> None:
     """Replace ``run_standard`` in the benchmark worker (call before ``runtime.control.worker``)."""
     from runtime import control
 
-    control.run_standard = make_chain_runner(arm_labels, defense_options)
+    control.run_standard = make_chain_runner(
+        arm_labels, defense_options, force_trigger=force_trigger
+    )

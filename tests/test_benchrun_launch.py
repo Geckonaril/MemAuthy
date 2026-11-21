@@ -139,3 +139,55 @@ def test_shipped_rehearsal_configs_pass_the_guard(name: str, tmp_path: Path) -> 
     config = load_config(ROOT / "configs" / name)
     plan = run_plan(config, CATALOG, tmp_path)
     assert plan["rehearsal"] and plan["tier"] == 1 and "D0:block" in plan["arms"]
+
+
+def test_force_trigger_is_rehearsal_only(tmp_path: Path) -> None:
+    assert run_plan(_config(force_trigger=True), CATALOG, tmp_path)["force_trigger"]
+    cfg = _config(force_trigger=True)
+    with pytest.raises(LaunchError):
+        run_plan(
+            cfg.model_copy(update={"params": {**cfg.params, "rehearsal": False}}), CATALOG, tmp_path
+        )
+
+
+def test_profile_counts_each_message_once(tmp_path: Path) -> None:
+    from memauthy.benchrun.profile import campaign_profile
+
+    chain = tmp_path / "outputs" / "c1"
+
+    def line(mid: str, inp: int, out: int) -> str:
+        return json.dumps(
+            {"message": {"id": mid, "usage": {"input_tokens": inp, "output_tokens": out}}}
+        )
+
+    def write(path: Path, data: Any) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(data), encoding="utf-8")
+
+    write(
+        chain / "exposure1_evidence.json",
+        {"trajectory": [{"lines": [line("m1", 100, 5), line("m1", 100, 5)]}]},
+    )
+    write(chain / "exposure1_upstream.json", {"rows": [{}, {}]})
+    write(
+        chain / "exposure2_evidence.json",
+        {"trajectory": [{"lines": [line("m1", 100, 5), line("m2", 300, 7)]}]},
+    )
+    write(
+        chain / "arms" / "D0-block" / "trigger_evidence.json",
+        {"trajectory": [{"lines": [line("t1", 50, 1)]}]},
+    )
+    write(
+        chain / "judging" / "exposure1" / "judge_cache" / "h" / "response_001.json",
+        {"usage": {"prompt_tokens": 1000, "completion_tokens": 20}},
+    )
+    totals = campaign_profile(tmp_path)["totals"]
+    assert (
+        totals["exposure"]["agent_prompt_tokens"] == 400
+        and totals["exposure"]["agent_messages"] == 2
+    )
+    assert (
+        totals["exposure"]["upstream_calls"] == 2
+        and totals["exposure"]["judge_prompt_tokens"] == 1000
+    )
+    assert totals["trigger"]["agent_prompt_tokens"] == 50 and totals["trigger"]["sessions"] == 1

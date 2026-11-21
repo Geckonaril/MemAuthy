@@ -285,3 +285,20 @@ def test_changed_arms_on_resume_raise(tmp_path: Path) -> None:
         bench.run(tmp_path, ARMS)  # stops mid-chain, identity saved
     with pytest.raises(LineageError, match="identity"):
         FakeBench().run(tmp_path, parse_arms(["D0", "D2"]))
+
+
+def test_force_trigger_runs_arms_without_positive_pmir(tmp_path: Path) -> None:
+    bench = FakeBench(pmirs=(None,))
+    result = run_defended_chain(
+        job={"chain_id": "c1", "case_id": "case-1"},
+        root=tmp_path,
+        arms=ARMS,
+        exposure=bench.exposure,
+        trigger=bench.trigger,
+        judge=bench.judge,
+        defend=lambda arm, exps: defend_exposure(arm, "claude_code", exps, case=CASE),
+        force_trigger=True,
+    )
+    assert result["exposure"]["trigger_status"] == "forced"
+    assert {v["status"] for v in result["arms"].values()} == {"run"}
+    assert result["state"] == "complete_with_unresolved"  # PMIR itself stays unresolved
