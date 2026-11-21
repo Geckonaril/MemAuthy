@@ -90,8 +90,9 @@ calls in total, about 2.8 s per call.
   identical-text look-alikes (0.13) and every `preference_disguise` variant.
 - On DPI-U (trusted user channel) D3 flags 0.812 of the rules. That is expected for a
   content-only defense and is the boundary case D4 deliberately leaves alone.
-- The `cost.json` `total` row sums nested timers (`evaluate` contains `audit:*` and the LLM
-  time), so its `seconds` overstates wall-clock time; use the `llm:*` and `audit:*` rows.
+- In these runs the `cost.json` `total` row sums nested timers (`evaluate` contains
+  `audit:*` and the LLM time), so its `seconds` overstates wall-clock time; use the `llm:*` and
+  `audit:*` rows. Later runs record nesting and count it once (issue #43, ADR-0004).
 
 ## Consequences
 - D3 results are **subset-based and model-specific** (`llama3.1:8b`, `d3-v1`). A full run, or

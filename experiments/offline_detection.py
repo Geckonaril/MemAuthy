@@ -68,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
         with run.cost.timed("evaluate"):
             rows, seconds = evaluate(samples, conditions, defense_options)
         for label, secs in seconds.items():
-            run.cost.add(f"audit:{label}", seconds=secs)
+            run.cost.add(f"audit:{label}", seconds=secs, within="evaluate")
 
         summary = summarize(rows, seconds)
         summary["config_hash"] = run.manifest.config_hash

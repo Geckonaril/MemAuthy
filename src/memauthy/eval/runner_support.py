@@ -78,6 +78,7 @@ def record_llm_usage(run: Run, client: CachedClient | None) -> dict[str, Any] | 
         output_tokens=s.output_tokens,
         seconds=s.seconds,
         usd=0.0,
+        within="audit:D3",  # model time is spent inside the D3 audit
     )
     return {
         "model": client.model,
